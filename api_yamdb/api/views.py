@@ -1,6 +1,7 @@
 from rest_framework import viewsets
-from reviews.models import Review
-from .serializers import ReviewSerializer
+from reviews.models import Review, Category, Genre, Title
+from .serializers import ReviewSerializer, CategorySerializer, GenreSerializer, TitleSerializer
+from rest_framework.permissions import IsAdminUser
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -12,3 +13,21 @@ class ReviewViewSet(viewsets.ModelViewSet):
         if title_id:
             return self.queryset.filter(title_id=title_id)
         return self.queryset
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAdminUser]
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = [IsAdminUser]
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    permission_classes = [IsAdminUser]
