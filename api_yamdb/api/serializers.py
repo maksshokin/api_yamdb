@@ -5,9 +5,18 @@ from reviews.models import Review, Category, Genre, Title, User
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
+
     class Meta:
-        fields = '__all__'
         model = Review
+        fields = '__all__'
+
+    def validate_score(self, value):
+        if not (1 <= value <= 10):
+            raise serializers.ValidationError("Score must be between 1 and 10.")
+        return value
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -25,8 +34,12 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre = GenreSerializer(many=True)
-    category = CategorySerializer()
+    genre = serializers.SlugRelatedField(
+        slug_field='slug', queryset=Genre.objects.all(), many=True
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
 
     class Meta:
         model = Title

@@ -22,21 +22,18 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=150, blank=True)
     confirmation_code = models.CharField(max_length=150, blank=True)
     password = models.CharField(max_length=150, blank=True)
-
+    
     def __str__(self):
         return self.username
 
 
-
-
-
-
-
-
-
 class Category(models.Model):
-    pass
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.name
+    
 
 class Genre(models.Model):
     name = models.CharField(max_length=256)

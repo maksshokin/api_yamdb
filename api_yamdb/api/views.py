@@ -4,6 +4,7 @@ from .serializers import ReviewSerializer, CategorySerializer, GenreSerializer, 
 from rest_framework.permissions import IsAdminUser, AllowAny
 from api.permissions import IsSuperUserOrAdmin
 from api_yamdb.settings import EMAIL
+from django.shortcuts import get_object_or_404
 
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail
@@ -22,24 +23,29 @@ class ReviewViewSet(viewsets.ModelViewSet):
         if title_id:
             return self.queryset.filter(title_id=title_id)
         return self.queryset
+    
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Title, id=title_id)
+        serializer.save(author=self.request.user, title=title)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsSuperUserOrAdmin]
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsSuperUserOrAdmin]
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsSuperUserOrAdmin]
 
 
 class UserViewSet(viewsets.GenericViewSet):
