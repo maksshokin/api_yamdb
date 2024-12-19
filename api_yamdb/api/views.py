@@ -25,22 +25,30 @@ class UserViewSet(viewsets.GenericViewSet):
         url_path='me')
     def user_info(self, request):
         serializer = UserSerializer(request.user)
-        if request.method == 'PATCH':
-            if request.user.is_admin:
-                serializer = UserSerializer(
-                    request.user,
-                    data=request.data,
-                    partial=True)
-            else:
-                serializer = NotAdminSerializer(
-                    request.user,
-                    data=request.data,
-                    partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.data)
+        if request.method == 'GET':
+            return Response(serializer.data)
+        if request.user.is_admin:
+            serializer = UserSerializer(
+                request.user,
+                data=request.data,
+                partial=True
+            )
+        else:
+            serializer = NotAdminSerializer(
+                request.user,
+                data=request.data,
+                partial=True
+            )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
 
 class TokenViewSet(viewsets.GenericViewSet):
-    queryset = User.objects.all()
+    pass
+
+class SingUpViewSet(viewsets.GenericViewSet):
     pass
