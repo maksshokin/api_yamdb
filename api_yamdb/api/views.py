@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from reviews.models import Review, Category, Genre, Title, User
 from .serializers import ReviewSerializer, CategorySerializer, GenreSerializer, TitleSerializer, UserSerializer, NotAdminSerializer
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from api.permissions import IsSuperUserOrAdmin
 from api_yamdb.settings import EMAIL
 
@@ -39,7 +39,7 @@ class GenreViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
 
 
 class UserViewSet(viewsets.GenericViewSet):

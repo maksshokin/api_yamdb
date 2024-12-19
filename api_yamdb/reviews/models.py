@@ -1,8 +1,37 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 
-User = get_user_model()
+# User = get_user_model()
+
+
+class User(AbstractUser):
+    ROLE_CHOICES = (
+        ('user', 'User'),
+        ('moderator', 'Moderator'),
+        ('admin', 'Administrator'),
+    )
+    role = models.CharField(
+        max_length=20, choices=ROLE_CHOICES, default='user'
+    )
+    bio = models.TextField(blank=True)
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=150, unique=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    confirmation_code = models.CharField(max_length=150, blank=True)
+    password = models.CharField(max_length=150, blank=True)
+
+    def __str__(self):
+        return self.username
+
+
+
+
+
+
+
 
 
 class Category(models.Model):
@@ -10,7 +39,8 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
-    pass
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(max_length=50, unique=True)
 
 
 class Title(models.Model):
@@ -65,3 +95,5 @@ class BaseModel(models.Model):
 
     def __str__(self):
         return self.name
+
+
