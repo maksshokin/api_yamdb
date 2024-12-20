@@ -49,8 +49,12 @@ urlpatterns = [
         name='token'
     ),
     path(
-        'titles/<int:title_id>/reviews/', ReviewListCreateView.as_view(), name='review-list'
+        'titles/<int:title_id>/reviews/',
+        ReviewListCreateView.as_view(),
+        name='review-list'
     ),
-    path('titles/<int:title_id>/reviews/<int:pk>/', ReviewRetrieveUpdateDestroyView.as_view(), name='review-detail'),
+    path('titles/<int:title_id>/reviews/<int:pk>/',
+        ReviewRetrieveUpdateDestroyView.as_view(),
+        name='review-detail'),
     path('', include(v1_router.urls)),
 ]

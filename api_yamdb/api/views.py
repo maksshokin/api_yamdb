@@ -43,7 +43,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
 
 class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = [IsSuperUserOrAdmin]
+    permission_classes = (IsSuperUserOrAdmin,)
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
@@ -52,8 +52,10 @@ class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = AdminSerializer
-    permission_classes = (IsSuperUserOrAdmin,)
+    serializer_class = (AdminSerializer,)
+    permission_classes = (
+        IsSuperUserOrAdmin,
+    )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
 
@@ -128,17 +130,17 @@ class SingUpViewSet(viewsets.GenericViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = (permissions.IsAdminUser,)
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = (permissions.IsAdminUser,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = (permissions.IsAdminUser,)
 
