@@ -18,12 +18,12 @@ router.register(
 urlpatterns = [
     path(
         'auth/signup/',
-        SingUpViewSet.as_view(),
+        SingUpViewSet.as_view({'post': 'post'}),
         name='signup'
     ),
     path(
         'auth/token/',
-        TokenViewSet.as_view(),
+        TokenViewSet.as_view({'post': 'post'}),
         name='token'
     ),
     path('', include(router.urls)),

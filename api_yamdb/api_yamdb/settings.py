@@ -106,6 +106,8 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = ((BASE_DIR / 'static/'),)
 
+AUTH_USER_MODEL = 'reviews.User'
+
 EMAIL = 'django.core.mail.backends.console.EmailBackend'
 
 REST_FRAMEWORK = {
