@@ -1,4 +1,3 @@
-<<<<<<<<< Temporary merge branch 1
 from api.serializers import (
     AdminSerializer,
     NotAdminSerializer,

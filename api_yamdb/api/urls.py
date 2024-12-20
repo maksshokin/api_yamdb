@@ -34,8 +34,7 @@ v1_router.register(
     basename='titles'
 )
 v1_router.register(
-    r'titles/(
-    ?P<title_id>\d+)/reviews',
+    r'titles/(?P<title_id>\d+)/reviews',
     ReviewViewSet, basename='reviews'
 )
 
