@@ -14,7 +14,7 @@ from api.views import(
 v1_router = SimpleRouter()
 
 v1_router.register(
-    'users',
+    r'users',
     UserViewSet,
     basename='users'
 )
