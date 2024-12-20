@@ -1,7 +1,9 @@
+<<<<<<<<< Temporary merge branch 1
 from api.serializers import (
     AdminSerializer,
     NotAdminSerializer,
     SingUpSerializer,
+    ReviewSerializer,
     TokenSerializer,
     CategorySerializer,
     GenreSerializer,
@@ -13,6 +15,7 @@ from reviews.models import (
     User,
     Category,
     Genre,
+    Review,
     Title
 )
 
@@ -23,6 +26,40 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+
+    def get_queryset(self):
+        title_id = self.kwargs.get('title_id')
+        if title_id:
+            return self.queryset.filter(title_id=title_id)
+        return self.queryset
+    
+    def perform_create(self, serializer):
+        title_id = self.kwargs.get('title_id')
+        title = get_object_or_404(Title, id=title_id)
+        serializer.save(author=self.request.user, title=title)
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsSuperUserOrAdmin]
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = [IsSuperUserOrAdmin]
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    permission_classes = [IsSuperUserOrAdmin]
 
 
 class UserViewSet(viewsets.GenericViewSet):
@@ -58,6 +95,7 @@ class UserViewSet(viewsets.GenericViewSet):
             serializer.data,
             status=status.HTTP_200_OK
         )
+
 
 
 class TokenViewSet(viewsets.GenericViewSet):
@@ -98,6 +136,7 @@ class SingUpViewSet(viewsets.GenericViewSet):
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -114,3 +153,4 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = [permissions.IsAdminUser]
+

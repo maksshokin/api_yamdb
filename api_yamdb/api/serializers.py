@@ -1,11 +1,12 @@
 from rest_framework import serializers
-
 from reviews.models import (
     User,
     Category,
     Genre,
+    Review,
     Title
 )
+
 
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +20,7 @@ class AdminSerializer(serializers.ModelSerializer):
             'role'
         )
 
+
 class NotAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -31,7 +33,6 @@ class NotAdminSerializer(serializers.ModelSerializer):
             'role'
         )
         read_only_fields = ('role',)
-
 class SingUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -66,6 +67,7 @@ class TokenSerializer(serializers.ModelSerializer):
             'confirmation_code'
         )
 
+
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -87,3 +89,45 @@ class TitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = '__all__'
+
+class ReviewSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+    def validate_score(self, value):
+        if not (1 <= value <= 10):
+            raise serializers.ValidationError("Score must be between 1 and 10.")
+        return value
+
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['name', 'slug']
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Genre
+        fields = ['name', 'slug']
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    genre = serializers.SlugRelatedField(
+        slug_field='slug', queryset=Genre.objects.all(), many=True
+    )
+    category = serializers.SlugRelatedField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = Title
+        fields = '__all__'
+
