@@ -42,25 +42,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
         title = get_object_or_404(Title, id=title_id)
         serializer.save(author=self.request.user, title=title)
 
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [IsSuperUserOrAdmin]
-
-
-class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genre.objects.all()
-    serializer_class = GenreSerializer
-    permission_classes = [IsSuperUserOrAdmin]
-
-
-class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-    permission_classes = [IsSuperUserOrAdmin]
-
-
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = AdminSerializer
