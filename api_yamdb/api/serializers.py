@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from reviews.models import User
 
+from reviews.models import (
+    User,
+    Category,
+    Genre,
+    Title
+)
 
 class AdminSerializer(serializers.ModelSerializer):
     class Meta:
@@ -60,3 +65,25 @@ class TokenSerializer(serializers.ModelSerializer):
             'username',
             'confirmation_code'
         )
+
+class CategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Category
+        fields = ['name', 'slug']
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Genre
+        fields = ['name', 'slug']
+
+
+class TitleSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
+
+    class Meta:
+        model = Title
+        fields = '__all__'

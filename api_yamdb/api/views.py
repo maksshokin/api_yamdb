@@ -1,13 +1,20 @@
-from django.shortcuts import get_object_or_404
 from api.serializers import (
     AdminSerializer,
     NotAdminSerializer,
     SingUpSerializer,
-    TokenSerializer
+    TokenSerializer,
+    CategorySerializer,
+    GenreSerializer,
+    TitleSerializer
 )
 from api.permissions import IsSuperUserOrAdmin
 from api_yamdb.settings import EMAIL
-from reviews.models import User
+from reviews.models import (
+    User,
+    Category,
+    Genre,
+    Title
+)
 
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
@@ -15,6 +22,8 @@ from rest_framework import filters, viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+
 
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
@@ -88,3 +97,20 @@ class SingUpViewSet(viewsets.GenericViewSet):
             message=f'Код подтверждения: {confirmation_code}',
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class GenreViewSet(viewsets.ModelViewSet):
+    queryset = Genre.objects.all()
+    serializer_class = GenreSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = Title.objects.all()
+    serializer_class = TitleSerializer
+    permission_classes = [permissions.IsAdminUser]
