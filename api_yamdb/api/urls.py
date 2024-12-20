@@ -1,17 +1,18 @@
 from django.urls import include, path
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import SimpleRouter, DefaultRouter
 
-from api.views import(
+from api.views import (
     UserViewSet,
     TokenViewSet,
     SingUpViewSet,
     CategoryViewSet,
     GenreViewSet,
-    ReviewViewSet,
+    ReviewListCreateView,
+    ReviewRetrieveUpdateDestroyView,
     TitleViewSet
 )
 
-v1_router = SimpleRouter()
+v1_router = DefaultRouter()
 
 v1_router.register(
     r'users',
@@ -33,10 +34,7 @@ v1_router.register(
     TitleViewSet,
     basename='titles'
 )
-v1_router.register(
-    r'titles/(?P<title_id>\d+)/reviews',
-    ReviewViewSet, basename='reviews'
-)
+
 
 
 urlpatterns = [
@@ -50,5 +48,9 @@ urlpatterns = [
         TokenViewSet.as_view({'post': 'post'}),
         name='token'
     ),
+    path(
+        'titles/<int:title_id>/reviews/', ReviewListCreateView.as_view(), name='review-list'
+    ),
+    path('titles/<int:title_id>/reviews/<int:pk>/', ReviewRetrieveUpdateDestroyView.as_view(), name='review-detail'),
     path('', include(v1_router.urls)),
 ]

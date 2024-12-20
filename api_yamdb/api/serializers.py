@@ -33,6 +33,8 @@ class NotAdminSerializer(serializers.ModelSerializer):
             'role'
         )
         read_only_fields = ('role',)
+
+
 class SingUpSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -51,6 +53,7 @@ class SingUpSerializer(serializers.ModelSerializer):
                 'Это имя занято!'
             )
         return data
+
 
 class TokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
@@ -90,19 +93,31 @@ class TitleSerializer(serializers.ModelSerializer):
         model = Title
         fields = '__all__'
 
+
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(
-        slug_field='username', read_only=True
-    )
+    author = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['id', 'text', 'score', 'author', 'pub_date']
+        read_only_fields = ['id', 'author', 'pub_date']
 
     def validate_score(self, value):
-        if not (1 <= value <= 10):
+        if not 1 <= value <= 10:
             raise serializers.ValidationError("Score must be between 1 and 10.")
         return value
+
+    def validate(self, data):
+        request = self.context['request']
+        title_id = self.context['view'].kwargs.get('title_id')
+        user = request.user
+
+        if request.method == 'POST':
+            if Review.objects.filter(title_id=title_id, author=user).exists():
+                raise serializers.ValidationError(
+                    "Вы уже оставили отзыв на это произведение."
+                )
+        return data
 
 
 class CategorySerializer(serializers.ModelSerializer):
