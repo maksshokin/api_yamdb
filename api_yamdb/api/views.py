@@ -14,7 +14,7 @@ from django.contrib.auth.tokens import default_token_generator
 from rest_framework import filters, viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
@@ -56,18 +56,19 @@ class TokenViewSet(viewsets.GenericViewSet):
     serializer_class = TokenSerializer
     permission_classes = (permissions.AllowAny,)
 
-    def create(self, request, *args, **kwargs):
+    def post(self, request):
         serializer = TokenSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        username = serializer.validated_data.get('username')
-        confirmation_code = serializer.validated_data.get('confirmation_code')
+        username = serializer.validated_data['username']
+        confirmation_code = serializer.validated_data['confirmation_code']
         user = get_object_or_404(User, username=username)
 
-        if not default_token_generator.check_token(user, confirmation_code):
-            message = {'confirmation_code': 'Код подтверждения невалиден'}
-            return Response(message, status=status.HTTP_400_BAD_REQUEST)
-        message = {'token': str(AccessToken.for_user(user))}
-        return Response(message, status=status.HTTP_200_OK)
+        if default_token_generator.check_token(user, confirmation_code):
+            token = RefreshToken.for_user(user).access_token
+            message = {'token': str(token)}
+            return Response(message, status=status.HTTP_200_OK)
+        message = {'confirmation_code': 'Неверный код подтверждения'}
+        return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 class SingUpViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
