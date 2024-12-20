@@ -7,9 +7,9 @@ from api.views import(
     SingUpViewSet
 )
 
-router = SimpleRouter()
+v1_router = SimpleRouter()
 
-router.register(
+v1_router.register(
     'users',
     UserViewSet,
     basename='users'
@@ -26,5 +26,5 @@ urlpatterns = [
         TokenViewSet.as_view({'post': 'post'}),
         name='token'
     ),
-    path('', include(router.urls)),
+    path('', include(v1_router.urls)),
 ]
