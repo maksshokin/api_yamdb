@@ -8,35 +8,22 @@ User = get_user_model()
 
 class BaseModel(models.Model):
     name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
-
-    class Meta:
-        abstract = True
+    slug = models.SlugField(
+        max_length=50,
+        unique=True,
+        validators=[RegexValidator(regex=r'^[-a-zA-Z0-9_]+$', message='Invalid slug format')]
+    )
 
     def __str__(self):
         return self.name
 
  
-class Category(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(
-        max_length=50,
-        unique=True,
-        validators=[RegexValidator(regex=r'^[-a-zA-Z0-9_]+$',
-        message='Invalid slug format')
-        ]
-    )
+class Category(BaseModel):
+    pass
 
 
-class Genre(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(
-        max_length=50,
-        unique=True,
-        validators=[RegexValidator(regex=r'^[-a-zA-Z0-9_]+$',
-        message='Invalid slug format')
-        ]
-    )
+class Genre(BaseModel):
+    pass
 
 
 class Title(models.Model):
@@ -53,3 +40,36 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments')
+    review = models.OneToOneField(
+        'Review',
+        on_delete=models.CASCADE,
+        related_name='comment',
+        null=True,
+        blank=True
+    )
+    text = models.TextField()
+    created = models.DateTimeField(
+        'Дата добавления', auto_now_add=True, db_index=True)
+
+
+class Review(models.Model):
+    title = models.ForeignKey(
+        Title, related_name='reviews', on_delete=models.CASCADE
+    )
+    author = models.ForeignKey(
+        User, related_name='reviews', on_delete=models.CASCADE
+    )
+    text = models.TextField()
+    score = models.PositiveSmallIntegerField()
+    pub_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('title', 'author') 
+
+    def __str__(self):
+        return f"Review by {self.author.username} on {self.title.name}"
