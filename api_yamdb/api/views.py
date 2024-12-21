@@ -1,4 +1,5 @@
 from api.serializers import (
+    PatchMeSerializer,
     UserSerializer,
     SingUpSerializer,
     ReviewSerializer,
@@ -66,15 +67,13 @@ class UserViewSet(viewsets.ModelViewSet):
         url_path='me',
     )
     def get_user_info(self, request):
-        serializer = UserSerializer(request.user, data=request.data,)
         if request.method == 'GET':
-            return Response(serializer.data)
+            serializer = PatchMeSerializer(request.user,)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        serializer = PatchMeSerializer(request.user, data=request.data,)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(
-            serializer.data,
-            status=status.HTTP_200_OK
-        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

@@ -1,0 +1,1502 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="59" skipped="0" tests="80" time="10.661" timestamp="2024-12-21T16:31:07.132386" hostname="Maksim"><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_nodata_signup" time="0.208" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_invalid_data_signup" time="0.019" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_singup_length_and_simbols_validation[data0-messege0]" time="0.016" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_singup_length_and_simbols_validation[data1-messege1]" time="0.015" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_singup_length_and_simbols_validation[data2-messege2]" time="0.021"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/auth/signup/` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\w.@+-]+\Z&#10;assert 200 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +200&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738A971F50&gt;, client = &lt;django.test.client.Client object at 0x000001738A97FB50&gt;, data = {'email': 'valid-email@yamdb.fake', 'username': '|-|aTa|_|_|a'}
+messege = ('Проверьте, что при обработке {request_method}-запроса к `{url}` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\\w.@+-]+\\Z',), django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_username_and_email_fields
+    )
+    def test_00_singup_length_and_simbols_validation(self, client,
+                                                     data, messege,
+                                                     django_user_model):
+        request_method = 'POST'
+        users_count = django_user_model.objects.count()
+        response = client.post(self.URL_SIGNUP, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            messege[0].format(
+                url=self.URL_SIGNUP, request_method=request_method
+            )
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/auth/signup/` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\w.@+-]+\Z
+E       assert 200 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +200
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:96: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_valid_data_user_signup" time="0.018" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_valid_data_admin_create_user" time="0.100"><failure message="AssertionError: Если POST-запрос от имени администратора к эндпоинту `/api/v1/users/` содержит корректные данные - должен вернуться ответ со статусом 201.&#10;assert 403 == &lt;HTTPStatus.CREATED: 201&gt;&#10;  +403&#10;  -&lt;HTTPStatus.CREATED: 201&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738ADBCF50&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A7AB4D0&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_00_valid_data_admin_create_user(self,
+                                             admin_client,
+                                             django_user_model):
+        outbox_before_count = len(mail.outbox)
+        valid_data = {
+            'email': 'valid@yamdb.fake',
+            'username': 'valid_username'
+        }
+        response = admin_client.post(
+            self.URL_ADMIN_CREATE_USER, data=valid_data
+        )
+        outbox_after = mail.outbox
+    
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.URL_ADMIN_CREATE_USER}` не найден. Проверьте '
+            'настройки в *urls.py*.'
+        )
+    
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос от имени администратора к эндпоинту '
+            f'`{self.URL_ADMIN_CREATE_USER}` содержит корректные данные - '
+            'должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос от имени администратора к эндпоинту `/api/v1/users/` содержит корректные данные - должен вернуться ответ со статусом 201.
+E       assert 403 == &lt;HTTPStatus.CREATED: 201&gt;
+E         +403
+E         -&lt;HTTPStatus.CREATED: 201&gt;
+
+tests\test_00_user_registration.py:171: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_admin_create_user_length_and_simbols_validation[data0-messege0]" time="0.090"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `email`: его содержимое не должно быть длиннее 254 символа.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738AA1DB10&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A9B0A50&gt;
+data = {'email': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@yamdb.fake', 'username': 'valid-username'}
+messege = ('Проверьте, что при обработке {request_method}-запроса к `{url}` проверяется длина поля `email`: его содержимое не должно быть длиннее 254 символа.',), django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_user_patch_and_creation
+    )
+    def test_00_admin_create_user_length_and_simbols_validation(
+            self, admin_client, data, messege, django_user_model
+    ):
+        request_method = 'POST'
+        users_count = django_user_model.objects.count()
+        response = admin_client.post(self.URL_ADMIN_CREATE_USER, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            messege[0].format(
+                url=self.URL_ADMIN_CREATE_USER, request_method=request_method
+            )
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `email`: его содержимое не должно быть длиннее 254 символа.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:211: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_admin_create_user_length_and_simbols_validation[data1-messege1]" time="0.088"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `username`: его содержимое не должно быть длиннее 150 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738A5B7710&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A875CD0&gt;
+data = {'email': 'valid-email@yamdb.fake', 'username': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'}
+messege = ('Проверьте, что при обработке {request_method}-запроса к `{url}` проверяется длина поля `username`: его содержимое не должно быть длиннее 150 символов.',), django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_user_patch_and_creation
+    )
+    def test_00_admin_create_user_length_and_simbols_validation(
+            self, admin_client, data, messege, django_user_model
+    ):
+        request_method = 'POST'
+        users_count = django_user_model.objects.count()
+        response = admin_client.post(self.URL_ADMIN_CREATE_USER, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            messege[0].format(
+                url=self.URL_ADMIN_CREATE_USER, request_method=request_method
+            )
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `username`: его содержимое не должно быть длиннее 150 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:211: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_admin_create_user_length_and_simbols_validation[data2-messege2]" time="0.088"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\w.@+-]+\Z&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738A9804D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE04510&gt;
+data = {'email': 'valid-email@yamdb.fake', 'username': '|-|aTa|_|_|a'}
+messege = ('Проверьте, что при обработке {request_method}-запроса к `{url}` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\\w.@+-]+\\Z',), django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_user_patch_and_creation
+    )
+    def test_00_admin_create_user_length_and_simbols_validation(
+            self, admin_client, data, messege, django_user_model
+    ):
+        request_method = 'POST'
+        users_count = django_user_model.objects.count()
+        response = admin_client.post(self.URL_ADMIN_CREATE_USER, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            messege[0].format(
+                url=self.URL_ADMIN_CREATE_USER, request_method=request_method
+            )
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\w.@+-]+\Z
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:211: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_admin_create_user_length_and_simbols_validation[data3-messege3]" time="0.092"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `first_name`: его содержимое не должно быть длиннее 150 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738A9A6490&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE0CCD0&gt;
+data = {'email': 'valid-email@yamdb.fake', 'first_name': 'toolonggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', 'username': 'validname'}
+messege = ('Проверьте, что при обработке POST-запроса к `{url}` проверяется длина поля `first_name`: его содержимое не должно быть длиннее 150 символов.',), django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_user_patch_and_creation
+    )
+    def test_00_admin_create_user_length_and_simbols_validation(
+            self, admin_client, data, messege, django_user_model
+    ):
+        request_method = 'POST'
+        users_count = django_user_model.objects.count()
+        response = admin_client.post(self.URL_ADMIN_CREATE_USER, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            messege[0].format(
+                url=self.URL_ADMIN_CREATE_USER, request_method=request_method
+            )
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `first_name`: его содержимое не должно быть длиннее 150 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:211: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_admin_create_user_length_and_simbols_validation[data4-messege4]" time="0.087"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `last_name`: его содержимое не должно быть длиннее 150 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738A9A4690&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE063D0&gt;
+data = {'email': 'valid-email@yamdb.fake', 'last_name': 'toolonggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg', 'username': 'validname'}
+messege = ('Проверьте, что при обработке POST-запроса к `{url}` проверяется длина поля `last_name`: его содержимое не должно быть длиннее 150 символов.',), django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_user_patch_and_creation
+    )
+    def test_00_admin_create_user_length_and_simbols_validation(
+            self, admin_client, data, messege, django_user_model
+    ):
+        request_method = 'POST'
+        users_count = django_user_model.objects.count()
+        response = admin_client.post(self.URL_ADMIN_CREATE_USER, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            messege[0].format(
+                url=self.URL_ADMIN_CREATE_USER, request_method=request_method
+            )
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/users/` проверяется длина поля `last_name`: его содержимое не должно быть длиннее 150 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:211: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_obtain_jwt_token_invalid_data" time="0.019" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_registration_me_username_restricted" time="0.016"><failure message="AssertionError: Если в POST-запросе, отправленном на эндпоинт `/api/v1/auth/signup/`, значением поля `username` указано `me` - должен вернуться ответ со статусом 400.&#10;assert 200 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +200&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738A9A5E50&gt;, client = &lt;django.test.client.Client object at 0x000001738AE06E10&gt;
+
+    def test_00_registration_me_username_restricted(self, client):
+        valid_data = {
+            'email': 'valid@yamdb.fake',
+            'username': 'me'
+        }
+        response = client.post(self.URL_SIGNUP, data=valid_data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            'Если в POST-запросе, отправленном на эндпоинт '
+            f'`{self.URL_SIGNUP}`, значением поля `username` указано `me` - '
+            'должен вернуться ответ со статусом 400.'
+        )
+E       AssertionError: Если в POST-запросе, отправленном на эндпоинт `/api/v1/auth/signup/`, значением поля `username` указано `me` - должен вернуться ответ со статусом 400.
+E       assert 200 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +200
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_00_user_registration.py:283: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_00_registration_same_email_restricted" time="0.018" /><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_get_new_confirmation_code_for_existing_user" time="0.016"><failure message="AssertionError: Проверьте, что повторный POST-запрос к `/api/v1/auth/signup/` с данными зарегистрированного пользователя возвращает ответ со статусом 200.&#10;assert 400 == &lt;HTTPStatus.OK: 200&gt;&#10;  +400&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738AD83B10&gt;, client = &lt;django.test.client.Client object at 0x000001738AE0C3D0&gt;
+
+    def test_get_new_confirmation_code_for_existing_user(self, client):
+        valid_data = {
+            'email': 'test_email@yamdb.fake',
+            'username': 'valid_username_1'
+        }
+        response = client.post(self.URL_SIGNUP, data=valid_data)
+        assert response.status_code == HTTPStatus.OK, (
+            'Проверьте, что POST-запрос с корректными данными, отправленный '
+            f'на эндпоинт `{self.URL_SIGNUP}`, возвращает ответ со статусом '
+            '200.'
+        )
+    
+        response = client.post(self.URL_SIGNUP, data=valid_data)
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            f'Проверьте, что повторный POST-запрос к `{self.URL_SIGNUP}` с '
+            'данными зарегистрированного пользователя возвращает ответ со '
+            'статусом 200.'
+        )
+E       AssertionError: Проверьте, что повторный POST-запрос к `/api/v1/auth/signup/` с данными зарегистрированного пользователя возвращает ответ со статусом 200.
+E       assert 400 == &lt;HTTPStatus.OK: 200&gt;
+E         +400
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_00_user_registration.py:351: AssertionError</failure></testcase><testcase classname="tests.test_00_user_registration.Test00UserRegistration" name="test_get_confirmation_code_for_user_created_by_admin" time="0.090"><failure message="AssertionError: Если POST-запрос администратора на эндпоинт `/api/v1/users/` содержит корректные данные - должен быть создан новый пользователь.&#10;assert 2 == 1&#10;  +2&#10;  -1">self = &lt;tests.test_00_user_registration.Test00UserRegistration object at 0x000001738AD9B1D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE24790&gt;, client = &lt;django.test.client.Client object at 0x000001738AE343D0&gt;
+django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_get_confirmation_code_for_user_created_by_admin(
+            self, admin_client, client, django_user_model
+    ):
+        user_cnt = django_user_model.objects.count()
+        valid_data = {
+            'email': 'test_email@yamdb.fake',
+            'username': 'valid_username_1'
+        }
+        admin_client.post(self.URL_ADMIN_CREATE_USER, data=valid_data)
+&gt;       assert (user_cnt + 1) == django_user_model.objects.count(), (
+            'Если POST-запрос администратора на эндпоинт '
+            f'`{self.URL_ADMIN_CREATE_USER}` содержит корректные данные - '
+            'должен быть создан новый пользователь.'
+        )
+E       AssertionError: Если POST-запрос администратора на эндпоинт `/api/v1/users/` содержит корректные данные - должен быть создан новый пользователь.
+E       assert 2 == 1
+E         +2
+E         -1
+
+tests\test_00_user_registration.py:366: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_01_users_not_authenticated" time="0.013" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_02_users_username_not_authenticated" time="0.087" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_03_users_me_not_authenticated" time="0.014" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_04_users_get_admin" time="0.089"><failure message="AssertionError: Проверьте, что GET-запрос к `/api/v1/users/` с токеном авторизации возвращает ответ со статусом 200.&#10;assert 403 == &lt;HTTPStatus.OK: 200&gt;&#10;  +403&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738ADBCB10&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE247D0&gt;, admin = &lt;User: TestAdmin&gt;
+
+    def test_04_users_get_admin(self, admin_client, admin):
+        response = admin_client.get(self.USERS_URL)
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.USERS_URL}` не найден. Проверьте настройки в '
+            '*urls.py*.'
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            f'Проверьте, что GET-запрос к `{self.USERS_URL}` с токеном '
+            'авторизации возвращает ответ со статусом 200.'
+        )
+E       AssertionError: Проверьте, что GET-запрос к `/api/v1/users/` с токеном авторизации возвращает ответ со статусом 200.
+E       assert 403 == &lt;HTTPStatus.OK: 200&gt;
+E         +403
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_01_users.py:84: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_04_02_users_get_search" time="0.164"><failure message="AssertionError: Проверьте, что GET-запрос к `/api/v1/users/?search={username}` возвращает результаты поиска по значению ключа `results` в виде списка.&#10;assert ('results' in {'detail': 'У вас недостаточно прав для выполнения данного действия.'})">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738AE04650&gt;, user = &lt;User: TestUser&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE53D10&gt;, admin = &lt;User: TestAdmin&gt;
+django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_04_02_users_get_search(self, user, admin_client,
+                                    admin, django_user_model):
+        search_url = f'{self.USERS_URL}?search={admin.username}'
+        response = admin_client.get(search_url)
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.USERS_URL}'
+            '?search={username}` не найден. Проверьте настройки в *urls.py*.'
+        )
+        reponse_json = response.json()
+&gt;       assert ('results' in reponse_json
+                and isinstance(reponse_json.get('results'), list)), (
+            f'Проверьте, что GET-запрос к `{self.USERS_URL}'
+            '?search={username}` возвращает результаты поиска по значению '
+            'ключа `results` в виде списка.'
+        )
+E       AssertionError: Проверьте, что GET-запрос к `/api/v1/users/?search={username}` возвращает результаты поиска по значению ключа `results` в виде списка.
+E       assert ('results' in {'detail': 'У вас недостаточно прав для выполнения данного действия.'})
+
+tests\test_01_users.py:108: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_04_01_users_get_admin_only" time="0.162" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_05_01_users_post_admin_bad_requests" time="0.088"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/users/` не содержит необходимых данных - должен вернуться ответ со статусом 400.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738AE35450&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738ADFF650&gt;, admin = &lt;User: TestAdmin&gt;
+
+    def test_05_01_users_post_admin_bad_requests(self, admin_client, admin):
+        empty_data = {}
+        response = admin_client.post(self.USERS_URL, data=empty_data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            f'Если POST-запрос администратора к `{self.USERS_URL}` '
+            'не содержит необходимых данных - должен вернуться ответ со '
+            'статусом 400.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/users/` не содержит необходимых данных - должен вернуться ответ со статусом 400.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_01_users.py:153: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_05_02_users_post_admin_user_creation[data0-]" time="0.093"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/users/` содержит корректные данные - должен вернуться ответ со статусом 201.&#10;assert 403 == &lt;HTTPStatus.CREATED: 201&gt;&#10;  +403&#10;  -&lt;HTTPStatus.CREATED: 201&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738AD99690&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE78090&gt;, data = {'email': 'testuser2@yamdb.fake', 'role': 'user', 'username': 'TestUser_2'}
+msg_modifier = '', django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize('data,msg_modifier', VALID_DATA_FOR_USER_CREATION)
+    def test_05_02_users_post_admin_user_creation(self, admin_client,
+                                                  data, msg_modifier,
+                                                  django_user_model):
+        response = admin_client.post(self.USERS_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            f'Если POST-запрос администратора к `{self.USERS_URL}` содержит '
+            f'корректные данные {msg_modifier}- должен вернуться ответ со '
+            'статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/users/` содержит корректные данные - должен вернуться ответ со статусом 201.
+E       assert 403 == &lt;HTTPStatus.CREATED: 201&gt;
+E         +403
+E         -&lt;HTTPStatus.CREATED: 201&gt;
+
+tests\test_01_users.py:208: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_05_02_users_post_admin_user_creation[data1-без указания роли нового пользователя ]" time="0.087"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/users/` содержит корректные данные без указания роли нового пользователя - должен вернуться ответ со статусом 201.&#10;assert 403 == &lt;HTTPStatus.CREATED: 201&gt;&#10;  +403&#10;  -&lt;HTTPStatus.CREATED: 201&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738AED1C90&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE65D10&gt;, data = {'email': 'testuser3@yamdb.fake', 'username': 'TestUser_3'}
+msg_modifier = 'без указания роли нового пользователя ', django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    @pytest.mark.parametrize('data,msg_modifier', VALID_DATA_FOR_USER_CREATION)
+    def test_05_02_users_post_admin_user_creation(self, admin_client,
+                                                  data, msg_modifier,
+                                                  django_user_model):
+        response = admin_client.post(self.USERS_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            f'Если POST-запрос администратора к `{self.USERS_URL}` содержит '
+            f'корректные данные {msg_modifier}- должен вернуться ответ со '
+            'статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/users/` содержит корректные данные без указания роли нового пользователя - должен вернуться ответ со статусом 201.
+E       assert 403 == &lt;HTTPStatus.CREATED: 201&gt;
+E         +403
+E         -&lt;HTTPStatus.CREATED: 201&gt;
+
+tests\test_01_users.py:208: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_05_03_users_post_response_has_data" time="0.092"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/users/` содержит корректные данные - должен вернуться ответ со статусом 201.&#10;assert 403 == &lt;HTTPStatus.CREATED: 201&gt;&#10;  +403&#10;  -&lt;HTTPStatus.CREATED: 201&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738AE64C50&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE1C1D0&gt;
+
+    def test_05_03_users_post_response_has_data(self, admin_client):
+        data = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'username': 'test_username',
+            'bio': 'test bio',
+            'role': 'moderator',
+            'email': 'testmoder2@yamdb.fake'
+        }
+        response = admin_client.post(self.USERS_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            f'Если POST-запрос администратора к `{self.USERS_URL}` '
+            'содержит корректные данные - должен вернуться ответ со статусом '
+            '201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/users/` содержит корректные данные - должен вернуться ответ со статусом 201.
+E       assert 403 == &lt;HTTPStatus.CREATED: 201&gt;
+E         +403
+E         -&lt;HTTPStatus.CREATED: 201&gt;
+
+tests\test_01_users.py:236: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_05_04_users_post_user_superuser" time="0.116"><failure message="TypeError: 'tuple' object is not callable">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738ADF5C10&gt;, user_superuser_client = &lt;rest_framework.test.APIClient object at 0x000001738AEDF090&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_05_04_users_post_user_superuser(self, user_superuser_client,
+                                             django_user_model):
+        valid_data = {
+            'username': 'TestUser_3',
+            'role': 'user',
+            'email': 'testuser3@yamdb.fake'
+        }
+&gt;       response = user_superuser_client.post(
+            self.USERS_URL, data=valid_data
+        )
+
+tests\test_01_users.py:260: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+venv\Lib\site-packages\rest_framework\test.py:295: in post
+    response = super().post(
+venv\Lib\site-packages\rest_framework\test.py:209: in post
+    return self.generic('POST', path, data, content_type, **extra)
+venv\Lib\site-packages\rest_framework\test.py:233: in generic
+    return super().generic(
+venv\Lib\site-packages\django\test\client.py:473: in generic
+    return self.request(**r)
+venv\Lib\site-packages\rest_framework\test.py:285: in request
+    return super().request(**kwargs)
+venv\Lib\site-packages\rest_framework\test.py:237: in request
+    request = super().request(**kwargs)
+venv\Lib\site-packages\django\test\client.py:719: in request
+    self.check_exception(response)
+venv\Lib\site-packages\django\test\client.py:580: in check_exception
+    raise exc_value
+venv\Lib\site-packages\django\core\handlers\exception.py:47: in inner
+    response = get_response(request)
+venv\Lib\site-packages\django\core\handlers\base.py:181: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+venv\Lib\site-packages\django\views\decorators\csrf.py:54: in wrapped_view
+    return view_func(*args, **kwargs)
+venv\Lib\site-packages\rest_framework\viewsets.py:125: in view
+    return self.dispatch(request, *args, **kwargs)
+venv\Lib\site-packages\rest_framework\views.py:509: in dispatch
+    response = self.handle_exception(exc)
+venv\Lib\site-packages\rest_framework\views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+venv\Lib\site-packages\rest_framework\views.py:480: in raise_uncaught_exception
+    raise exc
+venv\Lib\site-packages\rest_framework\views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+venv\Lib\site-packages\rest_framework\mixins.py:17: in create
+    serializer = self.get_serializer(data=request.data)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;api.views.UserViewSet object at 0x000001738AEDCA50&gt;, args = ()
+kwargs = {'context': {'format': None, 'request': &lt;rest_framework.request.Request: POST '/api/v1/users/'&gt;, 'view': &lt;api.views.Us...01738AEDCA50&gt;}, 'data': &lt;QueryDict: {'username': ['TestUser_3'], 'role': ['user'], 'email': ['testuser3@yamdb.fake']}&gt;}
+serializer_class = (&lt;class 'api.serializers.UserSerializer'&gt;,)
+
+    def get_serializer(self, *args, **kwargs):
+        """
+        Return the serializer instance that should be used for validating and
+        deserializing input, and for serializing output.
+        """
+        serializer_class = self.get_serializer_class()
+        kwargs.setdefault('context', self.get_serializer_context())
+&gt;       return serializer_class(*args, **kwargs)
+E       TypeError: 'tuple' object is not callable
+
+venv\Lib\site-packages\rest_framework\generics.py:110: TypeError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_06_users_username_get_admin" time="0.172"><failure message="AssertionError: Проверьте, что GET-запрос администратора к `/api/v1/users/{username}/` возвращает ответ со статусом 200.&#10;assert 403 == &lt;HTTPStatus.OK: 200&gt;&#10;  +403&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A7309D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2036D0&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_06_users_username_get_admin(self, admin_client, moderator):
+        response = admin_client.get(f'{self.USERS_URL}{moderator.username}/')
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.USERS_URL}'
+            '{username}/` не найден. Проверьте настройки в *urls.py*.'
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            f'Проверьте, что GET-запрос администратора к `{self.USERS_URL}'
+            '{username}/` возвращает ответ со статусом 200.'
+        )
+E       AssertionError: Проверьте, что GET-запрос администратора к `/api/v1/users/{username}/` возвращает ответ со статусом 200.
+E       assert 403 == &lt;HTTPStatus.OK: 200&gt;
+E         +403
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_01_users.py:283: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_06_users_username_get_not_admin" time="0.238" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_07_01_users_username_patch_admin" time="0.165"><failure message="AssertionError: Если PATCH-запрос администратора, отправленный к `/api/v1/users/{username}/`, содержит корректные данные - должен вернуться ответ со статусом 200.&#10;assert 403 == &lt;HTTPStatus.OK: 200&gt;&#10;  +403&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738ADD6BD0&gt;, user = &lt;User: TestUser&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A972F90&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_07_01_users_username_patch_admin(self, user, admin_client,
+                                              django_user_model):
+        data = {
+            'first_name': 'Admin',
+            'last_name': 'Test',
+            'bio': 'description'
+        }
+        response = admin_client.patch(
+            f'{self.USERS_URL}{user.username}/', data=data
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            'Если PATCH-запрос администратора, отправленный к '
+            f'`{self.USERS_URL}'
+            '{username}/`, содержит корректные данные - должен вернуться '
+            'ответ со статусом 200.'
+        )
+E       AssertionError: Если PATCH-запрос администратора, отправленный к `/api/v1/users/{username}/`, содержит корректные данные - должен вернуться ответ со статусом 200.
+E       assert 403 == &lt;HTTPStatus.OK: 200&gt;
+E         +403
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_01_users.py:325: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_07_02_users_username_patch_moderator" time="0.164" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_07_03_users_username_patch_user" time="0.088" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_07_05_users_username_put_not_allowed" time="0.163"><failure message="AssertionError: Проверьте, что PUT-запрос к `/api/v1/users/{username}/` не предусмотрен и возвращает статус 405.&#10;assert 403 == &lt;HTTPStatus.METHOD_NOT_ALLOWED: 405&gt;&#10;  +403&#10;  -&lt;HTTPStatus.METHOD_NOT_ALLOWED: 405&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A658190&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2032D0&gt;, user = &lt;User: TestUser&gt;
+
+    def test_07_05_users_username_put_not_allowed(self, admin_client, user):
+        response = admin_client.put(
+            f'{self.USERS_URL}{user.username}/', data=self.PATCH_DATA
+        )
+&gt;       assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED, (
+            f'Проверьте, что PUT-запрос к `{self.USERS_URL}'
+            '{username}/` не предусмотрен и возвращает статус 405.'
+        )
+E       AssertionError: Проверьте, что PUT-запрос к `/api/v1/users/{username}/` не предусмотрен и возвращает статус 405.
+E       assert 403 == &lt;HTTPStatus.METHOD_NOT_ALLOWED: 405&gt;
+E         +403
+E         -&lt;HTTPStatus.METHOD_NOT_ALLOWED: 405&gt;
+
+tests\test_01_users.py:412: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_08_01_users_username_delete_admin" time="0.162"><failure message="AssertionError: Проверьте, что DELETE-запрос администратора к `/api/v1/users/{username}/` возвращает ответ со статусом 204.&#10;assert 403 == &lt;HTTPStatus.NO_CONTENT: 204&gt;&#10;  +403&#10;  -&lt;HTTPStatus.NO_CONTENT: 204&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A7E1F10&gt;, user = &lt;User: TestUser&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A7C8210&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_08_01_users_username_delete_admin(self, user, admin_client,
+                                               django_user_model):
+        users_cnt = django_user_model.objects.count()
+        response = admin_client.delete(f'{self.USERS_URL}{user.username}/')
+&gt;       assert response.status_code == HTTPStatus.NO_CONTENT, (
+            f'Проверьте, что DELETE-запрос администратора к `{self.USERS_URL}'
+            '{username}/` возвращает ответ со статусом 204.'
+        )
+E       AssertionError: Проверьте, что DELETE-запрос администратора к `/api/v1/users/{username}/` возвращает ответ со статусом 204.
+E       assert 403 == &lt;HTTPStatus.NO_CONTENT: 204&gt;
+E         +403
+E         -&lt;HTTPStatus.NO_CONTENT: 204&gt;
+
+tests\test_01_users.py:421: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_08_02_users_username_delete_moderator" time="0.163" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_08_03_users_username_delete_user" time="0.088" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_08_04_users_username_delete_superuser" time="0.163"><failure message="AssertionError: Проверьте, что DELETE-запрос суперпользователя к `/api/v1/users/{username}/` возвращает ответ со статусом 204.&#10;assert 404 == &lt;HTTPStatus.NO_CONTENT: 204&gt;&#10;  +404&#10;  -&lt;HTTPStatus.NO_CONTENT: 204&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A786B10&gt;, user_superuser_client = &lt;rest_framework.test.APIClient object at 0x000001738A97C2D0&gt;, user = &lt;User: TestUser&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_08_04_users_username_delete_superuser(self, user_superuser_client,
+                                                   user, django_user_model):
+        users_cnt = django_user_model.objects.count()
+        response = user_superuser_client.delete(
+            f'{self.USERS_URL}{user.username}/'
+        )
+&gt;       assert response.status_code == HTTPStatus.NO_CONTENT, (
+            'Проверьте, что DELETE-запрос суперпользователя к '
+            f'`{self.USERS_URL}'
+            '{username}/` возвращает ответ со статусом 204.'
+        )
+E       AssertionError: Проверьте, что DELETE-запрос суперпользователя к `/api/v1/users/{username}/` возвращает ответ со статусом 204.
+E       assert 404 == &lt;HTTPStatus.NO_CONTENT: 204&gt;
+E         +404
+E         -&lt;HTTPStatus.NO_CONTENT: 204&gt;
+
+tests\test_01_users.py:464: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_09_users_me_get" time="0.096"><failure message="AssertionError: When a serializer is passed a `data` keyword argument you must call `.is_valid()` before attempting to access the serialized `.data` representation.&#10;You should either call `.is_valid()` first, or access `.initial_data` instead.">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A5B5050&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738A7C34D0&gt;, user = &lt;User: TestUser&gt;
+
+    def test_09_users_me_get(self, user_client, user):
+&gt;       response = user_client.get(f'{self.USERS_ME_URL}')
+
+tests\test_01_users.py:476: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+venv\Lib\site-packages\rest_framework\test.py:288: in get
+    response = super().get(path, data=data, **extra)
+venv\Lib\site-packages\rest_framework\test.py:205: in get
+    return self.generic('GET', path, **r)
+venv\Lib\site-packages\rest_framework\test.py:233: in generic
+    return super().generic(
+venv\Lib\site-packages\django\test\client.py:473: in generic
+    return self.request(**r)
+venv\Lib\site-packages\rest_framework\test.py:285: in request
+    return super().request(**kwargs)
+venv\Lib\site-packages\rest_framework\test.py:237: in request
+    request = super().request(**kwargs)
+venv\Lib\site-packages\django\test\client.py:719: in request
+    self.check_exception(response)
+venv\Lib\site-packages\django\test\client.py:580: in check_exception
+    raise exc_value
+venv\Lib\site-packages\django\core\handlers\exception.py:47: in inner
+    response = get_response(request)
+venv\Lib\site-packages\django\core\handlers\base.py:181: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+venv\Lib\site-packages\django\views\decorators\csrf.py:54: in wrapped_view
+    return view_func(*args, **kwargs)
+venv\Lib\site-packages\rest_framework\viewsets.py:125: in view
+    return self.dispatch(request, *args, **kwargs)
+venv\Lib\site-packages\rest_framework\views.py:509: in dispatch
+    response = self.handle_exception(exc)
+venv\Lib\site-packages\rest_framework\views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+venv\Lib\site-packages\rest_framework\views.py:480: in raise_uncaught_exception
+    raise exc
+venv\Lib\site-packages\rest_framework\views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+api_yamdb\api\views.py:71: in get_user_info
+    return Response(serializer.data)
+venv\Lib\site-packages\rest_framework\serializers.py:548: in data
+    ret = super().data
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = UserSerializer(&lt;User: TestUser&gt;, data={}):
+    username = CharField(max_length=150, validators=[&lt;UniqueValidator(query...=False, style={'base_template': 'textarea.html'})
+    role = CharField(allow_blank=True, max_length=20, required=False)
+
+    @property
+    def data(self):
+        if hasattr(self, 'initial_data') and not hasattr(self, '_validated_data'):
+            msg = (
+                'When a serializer is passed a `data` keyword argument you '
+                'must call `.is_valid()` before attempting to access the '
+                'serialized `.data` representation.\n'
+                'You should either call `.is_valid()` first, '
+                'or access `.initial_data` instead.'
+            )
+&gt;           raise AssertionError(msg)
+E           AssertionError: When a serializer is passed a `data` keyword argument you must call `.is_valid()` before attempting to access the serialized `.data` representation.
+E           You should either call `.is_valid()` first, or access `.initial_data` instead.
+
+venv\Lib\site-packages\rest_framework\serializers.py:242: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_09_02_users_me_delete_not_allowed" time="0.089" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_01_users_me_patch" time="0.238"><failure message="AssertionError: Проверьте, что PATCH-запрос к `/api/v1/users/me/` доступен пользователям всех ролей и возвращает ответ со статусом 200.&#10;assert 400 == &lt;HTTPStatus.OK: 200&gt;&#10;  +400&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A82A890&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B07FA10&gt;, admin = &lt;User: TestAdmin&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738A7FB0D0&gt;, moderator = &lt;User: TestModerator&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B2EA490&gt;, user = &lt;User: TestAdmin&gt;
+
+    def test_10_01_users_me_patch(self, django_user_model, admin_client,
+                                  admin, moderator_client, moderator,
+                                  user_client, user):
+        data = {'bio': 'description'}
+    
+        for client, user in (
+                (admin_client, admin),
+                (moderator_client, moderator),
+                (user_client, user)
+        ):
+            response = client.patch(f'{self.USERS_ME_URL}', data=data)
+&gt;           assert response.status_code == HTTPStatus.OK, (
+                'Проверьте, что PATCH-запрос к '
+                f'`{self.USERS_ME_URL}` доступен пользователям всех '
+                'ролей и возвращает ответ со статусом 200.'
+            )
+E           AssertionError: Проверьте, что PATCH-запрос к `/api/v1/users/me/` доступен пользователям всех ролей и возвращает ответ со статусом 200.
+E           assert 400 == &lt;HTTPStatus.OK: 200&gt;
+E             +400
+E             -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_01_users.py:518: AssertionError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_02_users_me_has_field_validation[data0-messege0]" time="0.090" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_02_users_me_has_field_validation[data1-messege1]" time="0.089" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_02_users_me_has_field_validation[data2-messege2]" time="0.097"><failure message="TypeError: object of type 'NoneType' has no len()">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738AED5610&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738AEDFD90&gt;, data = {'email': 'valid-email@yamdb.fake', 'username': '|-|aTa|_|_|a'}
+messege = ('Проверьте, что при обработке {request_method}-запроса к `{url}` содержание поля `username` проверяется на соответствие паттерну, указанному в спецификации: ^[\\w.@+-]+\\Z',)
+
+    @pytest.mark.parametrize(
+        'data,messege', invalid_data_for_user_patch_and_creation
+    )
+    def test_10_02_users_me_has_field_validation(self, user_client, data,
+                                                 messege):
+        request_method = 'PATCH'
+&gt;       response = user_client.patch(self.USERS_ME_URL, data=data)
+
+tests\test_01_users.py:537: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+venv\Lib\site-packages\rest_framework\test.py:311: in patch
+    response = super().patch(
+venv\Lib\site-packages\rest_framework\test.py:217: in patch
+    return self.generic('PATCH', path, data, content_type, **extra)
+venv\Lib\site-packages\rest_framework\test.py:233: in generic
+    return super().generic(
+venv\Lib\site-packages\django\test\client.py:473: in generic
+    return self.request(**r)
+venv\Lib\site-packages\rest_framework\test.py:285: in request
+    return super().request(**kwargs)
+venv\Lib\site-packages\rest_framework\test.py:237: in request
+    request = super().request(**kwargs)
+venv\Lib\site-packages\django\test\client.py:719: in request
+    self.check_exception(response)
+venv\Lib\site-packages\django\test\client.py:580: in check_exception
+    raise exc_value
+venv\Lib\site-packages\django\core\handlers\exception.py:47: in inner
+    response = get_response(request)
+venv\Lib\site-packages\django\core\handlers\base.py:181: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+venv\Lib\site-packages\django\views\decorators\csrf.py:54: in wrapped_view
+    return view_func(*args, **kwargs)
+venv\Lib\site-packages\rest_framework\viewsets.py:125: in view
+    return self.dispatch(request, *args, **kwargs)
+venv\Lib\site-packages\rest_framework\views.py:509: in dispatch
+    response = self.handle_exception(exc)
+venv\Lib\site-packages\rest_framework\views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+venv\Lib\site-packages\rest_framework\views.py:480: in raise_uncaught_exception
+    raise exc
+venv\Lib\site-packages\rest_framework\views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+api_yamdb\api\views.py:72: in get_user_info
+    serializer.is_valid(raise_exception=True)
+venv\Lib\site-packages\rest_framework\serializers.py:220: in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+venv\Lib\site-packages\rest_framework\serializers.py:422: in run_validation
+    value = self.validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = UserSerializer(&lt;User: TestUser&gt;, data=&lt;QueryDict: {'email': ['valid-email@yamdb.fake'], 'username': ['|-|aTa|_|_|a']}&gt;...=False, style={'base_template': 'textarea.html'})
+    role = CharField(allow_blank=True, max_length=20, required=False)
+data = OrderedDict([('username', '|-|aTa|_|_|a'), ('email', 'valid-email@yamdb.fake')])
+
+    def validate(self, data):
+        if len(data.get('username')) &gt; 150:
+            raise serializers.ValidationError(
+                'Слишком длинный ник!'
+            )
+        if len(data.get('email')) &gt; 150:
+            raise serializers.ValidationError(
+                'Слишком длинный ник!'
+            )
+&gt;       if len(data.get('last_name')) &gt; 150:
+E       TypeError: object of type 'NoneType' has no len()
+
+api_yamdb\api\serializers.py:31: TypeError</failure></testcase><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_02_users_me_has_field_validation[data3-messege3]" time="0.090" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_02_users_me_has_field_validation[data4-messege4]" time="0.089" /><testcase classname="tests.test_01_users.Test01UserAPI" name="test_10_03_users_me_patch_change_role_not_allowed" time="0.091"><failure message="AssertionError: Проверьте, что PATCH-запрос пользователя с ролью `user` к `/api/v1/users/me/` возвращает ответ со статусом 200.&#10;assert 400 == &lt;HTTPStatus.OK: 200&gt;&#10;  +400&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_01_users.Test01UserAPI object at 0x000001738A9801D0&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738A80DF90&gt;, user = &lt;User: TestUser&gt;, django_user_model = &lt;class 'reviews.models.User'&gt;
+
+    def test_10_03_users_me_patch_change_role_not_allowed(self,
+                                                          user_client,
+                                                          user,
+                                                          django_user_model):
+        response = user_client.patch(
+            f'{self.USERS_ME_URL}', data=self.PATCH_DATA
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            'Проверьте, что PATCH-запрос пользователя с ролью `user` к '
+            f'`{self.USERS_ME_URL}` возвращает ответ со статусом 200.'
+        )
+E       AssertionError: Проверьте, что PATCH-запрос пользователя с ролью `user` к `/api/v1/users/me/` возвращает ответ со статусом 200.
+E       assert 400 == &lt;HTTPStatus.OK: 200&gt;
+E         +400
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_01_users.py:552: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_01_category_not_auth" time="0.013"><failure message="AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/categories/` возвращает ответ со статусом 200.&#10;assert 401 == &lt;HTTPStatus.OK: 200&gt;&#10;  +401&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738AEB8790&gt;, client = &lt;django.test.client.Client object at 0x000001738AE76550&gt;
+
+    def test_01_category_not_auth(self, client):
+        response = client.get(self.CATEGORY_URL)
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.CATEGORY_URL}` не найден. Проверьте настройки в '
+            '*urls.py*.'
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            'Проверьте, что GET-запрос неавторизованного пользователя к '
+            f'`{self.CATEGORY_URL}` возвращает ответ со статусом 200.'
+        )
+E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/categories/` возвращает ответ со статусом 200.
+E       assert 401 == &lt;HTTPStatus.OK: 200&gt;
+E         +401
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_02_category.py:23: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_02_category_with_admin_user" time="0.089"><failure message="AssertionError: Если POST-запрос администратора, отправленный к `/api/v1/categories/`, содержит некорректные данные - должен вернуться ответ со статусом 400.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738A6E2A10&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE37090&gt;
+
+    def test_02_category_with_admin_user(self, admin_client):
+        categories_count = 0
+    
+        data = {}
+        response = admin_client.post(self.CATEGORY_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            'Если POST-запрос администратора, отправленный к '
+            f'`{self.CATEGORY_URL}`, содержит некорректные данные - должен '
+            'вернуться ответ со статусом 400.'
+        )
+E       AssertionError: Если POST-запрос администратора, отправленный к `/api/v1/categories/`, содержит некорректные данные - должен вернуться ответ со статусом 400.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_02_category.py:33: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_03_category_fields_validation[data0-massage0]" time="0.090"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/categories/` проверяется длина поля `name`: название произведения не должно быть длиннее 256 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738AA1CDD0&gt;
+data = {'name': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasimbols', 'slug': 'longname'}
+massage = ('Проверьте, что при обработке POST-запроса к `{url}` проверяется длина поля `name`: название произведения не должно быть длиннее 256 символов.',), admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AECAA90&gt;
+
+    @pytest.mark.parametrize('data,massage', check_name_and_slug_patterns)
+    def test_03_category_fields_validation(self, data, massage, admin_client):
+        response = admin_client.post(self.CATEGORY_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            massage[0].format(url=self.CATEGORY_URL)
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/categories/` проверяется длина поля `name`: название произведения не должно быть длиннее 256 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_02_category.py:95: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_03_category_fields_validation[data1-massage1]" time="0.090"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/categories/` проверяется длина поля `slug`: его содержимое не должно быть длиннее 50 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738A82A790&gt;, data = {'name': 'longslug', 'slug': 'llllllllllllllllllllllllllllllllllllllllllllllllllsimbols'}
+massage = ('Проверьте, что при обработке POST-запроса к `{url}` проверяется длина поля `slug`: его содержимое не должно быть длиннее 50 символов.',), admin_client = &lt;rest_framework.test.APIClient object at 0x000001738ADCAAD0&gt;
+
+    @pytest.mark.parametrize('data,massage', check_name_and_slug_patterns)
+    def test_03_category_fields_validation(self, data, massage, admin_client):
+        response = admin_client.post(self.CATEGORY_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            massage[0].format(url=self.CATEGORY_URL)
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/categories/` проверяется длина поля `slug`: его содержимое не должно быть длиннее 50 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_02_category.py:95: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_03_category_fields_validation[data2-massage2]" time="0.098"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/categories/` содержание поля `slug` проверяется на соответствие паттерну, указанному в спецификации: ^[-a-zA-Z0-9_]+$&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738A82A110&gt;, data = {'name': 'brokenslug', 'slug': ':-)'}
+massage = ('Проверьте, что при обработке POST-запроса к `{url}` содержание поля `slug` проверяется на соответствие паттерну, указанному в спецификации: ^[-a-zA-Z0-9_]+$',)
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2C6390&gt;
+
+    @pytest.mark.parametrize('data,massage', check_name_and_slug_patterns)
+    def test_03_category_fields_validation(self, data, massage, admin_client):
+        response = admin_client.post(self.CATEGORY_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            massage[0].format(url=self.CATEGORY_URL)
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/categories/` содержание поля `slug` проверяется на соответствие паттерну, указанному в спецификации: ^[-a-zA-Z0-9_]+$
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_02_category.py:95: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_04_category_delete_admin" time="0.089"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/categories/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738A6F1510&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738ADE7590&gt;
+
+    def test_04_category_delete_admin(self, admin_client):
+&gt;       category_1, category_2 = create_categories(admin_client)
+
+tests\test_02_category.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738ADE7590&gt;
+
+    def create_categories(admin_client):
+        data1 = {
+            'name': 'Фильм',
+            'slug': 'films'
+        }
+        response = admin_client.post('/api/v1/categories/', data=data1)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/categories/` '
+            'содержит корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/categories/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:186: AssertionError</failure></testcase><testcase classname="tests.test_02_category.Test02CategoryAPI" name="test_05_category_check_permission_admin" time="0.243"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/categories/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_02_category.Test02CategoryAPI object at 0x000001738A74C810&gt;, client = &lt;django.test.client.Client object at 0x000001738B069690&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B068F90&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738A8041D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A8073D0&gt;
+
+    def test_05_category_check_permission_admin(self, client,
+                                                user_client,
+                                                moderator_client,
+                                                admin_client):
+&gt;       categories = create_categories(admin_client)
+
+tests\test_02_category.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A8073D0&gt;
+
+    def create_categories(admin_client):
+        data1 = {
+            'name': 'Фильм',
+            'slug': 'films'
+        }
+        response = admin_client.post('/api/v1/categories/', data=data1)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/categories/` '
+            'содержит корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/categories/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:186: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_01_genre_not_auth" time="0.014"><failure message="AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к  `/api/v1/genres/` возвращает ответ со статусом 200.&#10;assert 401 == &lt;HTTPStatus.OK: 200&gt;&#10;  +401&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738AE0EE50&gt;, client = &lt;django.test.client.Client object at 0x000001738AD9AA10&gt;
+
+    def test_01_genre_not_auth(self, client):
+        response = client.get(self.GENRES_URL)
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.GENRES_URL}` не найден. Проверьте настройки в '
+            '*urls.py*.'
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            'Проверьте, что GET-запрос неавторизованного пользователя к  '
+            f'`{self.GENRES_URL}` возвращает ответ со статусом 200.'
+        )
+E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к  `/api/v1/genres/` возвращает ответ со статусом 200.
+E       assert 401 == &lt;HTTPStatus.OK: 200&gt;
+E         +401
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_03_genre.py:23: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_02_genre" time="0.089"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит некорректные данные - должен вернуться ответ со статусом 400.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738AD98450&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A813DD0&gt;, client = &lt;django.test.client.Client object at 0x000001738A8126D0&gt;
+
+    def test_02_genre(self, admin_client, client):
+        genres_count = 0
+    
+        data = {}
+        response = admin_client.post(self.GENRES_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            f'Если POST-запрос администратора к `{self.GENRES_URL}` '
+            'содержит некорректные данные - должен вернуться ответ со '
+            'статусом 400.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит некорректные данные - должен вернуться ответ со статусом 400.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_03_genre.py:33: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_03_category_fields_validation[data0-massage0]" time="0.102"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/genres/` проверяется длина поля `name`: название произведения не должно быть длиннее 256 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738AE1C210&gt;
+data = {'name': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasimbols', 'slug': 'longname'}
+massage = ('Проверьте, что при обработке POST-запроса к `{url}` проверяется длина поля `name`: название произведения не должно быть длиннее 256 символов.',), admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AEE7A90&gt;
+
+    @pytest.mark.parametrize('data,massage', check_name_and_slug_patterns)
+    def test_03_category_fields_validation(self, data, massage, admin_client):
+        response = admin_client.post(self.GENRES_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            massage[0].format(url=self.GENRES_URL)
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/genres/` проверяется длина поля `name`: название произведения не должно быть длиннее 256 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_03_genre.py:85: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_03_category_fields_validation[data1-massage1]" time="0.090"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/genres/` проверяется длина поля `slug`: его содержимое не должно быть длиннее 50 символов.&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738A79FE10&gt;, data = {'name': 'longslug', 'slug': 'llllllllllllllllllllllllllllllllllllllllllllllllllsimbols'}
+massage = ('Проверьте, что при обработке POST-запроса к `{url}` проверяется длина поля `slug`: его содержимое не должно быть длиннее 50 символов.',), admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AEDD1D0&gt;
+
+    @pytest.mark.parametrize('data,massage', check_name_and_slug_patterns)
+    def test_03_category_fields_validation(self, data, massage, admin_client):
+        response = admin_client.post(self.GENRES_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            massage[0].format(url=self.GENRES_URL)
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/genres/` проверяется длина поля `slug`: его содержимое не должно быть длиннее 50 символов.
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_03_genre.py:85: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_03_category_fields_validation[data2-massage2]" time="0.090"><failure message="AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/genres/` содержание поля `slug` проверяется на соответствие паттерну, указанному в спецификации: ^[-a-zA-Z0-9_]+$&#10;assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;&#10;  +403&#10;  -&lt;HTTPStatus.BAD_REQUEST: 400&gt;">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738A62F2D0&gt;, data = {'name': 'brokenslug', 'slug': ':-)'}
+massage = ('Проверьте, что при обработке POST-запроса к `{url}` содержание поля `slug` проверяется на соответствие паттерну, указанному в спецификации: ^[-a-zA-Z0-9_]+$',)
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE34790&gt;
+
+    @pytest.mark.parametrize('data,massage', check_name_and_slug_patterns)
+    def test_03_category_fields_validation(self, data, massage, admin_client):
+        response = admin_client.post(self.GENRES_URL, data=data)
+&gt;       assert response.status_code == HTTPStatus.BAD_REQUEST, (
+            massage[0].format(url=self.GENRES_URL)
+        )
+E       AssertionError: Проверьте, что при обработке POST-запроса к `/api/v1/genres/` содержание поля `slug` проверяется на соответствие паттерну, указанному в спецификации: ^[-a-zA-Z0-9_]+$
+E       assert 403 == &lt;HTTPStatus.BAD_REQUEST: 400&gt;
+E         +403
+E         -&lt;HTTPStatus.BAD_REQUEST: 400&gt;
+
+tests\test_03_genre.py:85: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_04_genres_delete" time="0.088"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738AD80550&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE37B50&gt;
+
+    def test_04_genres_delete(self, admin_client):
+&gt;       genres = create_genre(admin_client)
+
+tests\test_03_genre.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE37B50&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_03_genre.Test03GenreAPI" name="test_05_genres_check_permission" time="0.237"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_03_genre.Test03GenreAPI object at 0x000001738AE34990&gt;, client = &lt;django.test.client.Client object at 0x000001738B35EE90&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B35E790&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738B35EE50&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B267C90&gt;
+
+    def test_05_genres_check_permission(self, client,
+                                        user_client,
+                                        moderator_client,
+                                        admin_client):
+&gt;       genres = create_genre(admin_client)
+
+tests\test_03_genre.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B267C90&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_04_title.Test04TitleAPI" name="test_01_title_not_auth" time="0.014"><failure message="AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/` возвращает ответ со статусом 200.&#10;assert 401 == &lt;HTTPStatus.OK: 200&gt;&#10;  +401&#10;  -&lt;HTTPStatus.OK: 200&gt;">self = &lt;tests.test_04_title.Test04TitleAPI object at 0x000001738A7D7110&gt;, client = &lt;django.test.client.Client object at 0x000001738A738250&gt;
+
+    def test_01_title_not_auth(self, client):
+        response = client.get(self.TITLES_URL)
+        assert response.status_code != HTTPStatus.NOT_FOUND, (
+            f'Эндпоинт `{self.TITLES_URL}` не найден.Проверьте настройки в '
+            '*urls.py*.'
+        )
+&gt;       assert response.status_code == HTTPStatus.OK, (
+            'Проверьте, что GET-запрос неавторизованного пользователя к '
+            f'`{self.TITLES_URL}` возвращает ответ со статусом 200.'
+        )
+E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/` возвращает ответ со статусом 200.
+E       assert 401 == &lt;HTTPStatus.OK: 200&gt;
+E         +401
+E         -&lt;HTTPStatus.OK: 200&gt;
+
+tests\test_04_title.py:23: AssertionError</failure></testcase><testcase classname="tests.test_04_title.Test04TitleAPI" name="test_02_title_admin" time="0.090"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_04_title.Test04TitleAPI object at 0x000001738AEB88D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE6C5D0&gt;, client = &lt;django.test.client.Client object at 0x000001738AE6DC50&gt;
+
+    def test_02_title_admin(self, admin_client, client):
+&gt;       genres = create_genre(admin_client)
+
+tests\test_04_title.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE6C5D0&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_04_title.Test04TitleAPI" name="test_03_titles_detail" time="0.090"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_04_title.Test04TitleAPI object at 0x000001738AFAD650&gt;, client = &lt;django.test.client.Client object at 0x000001738A8213D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A821650&gt;
+
+    def test_03_titles_detail(self, client, admin_client):
+&gt;       titles, categories, _ = create_titles(admin_client)
+
+tests\test_04_title.py:197: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A821650&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_04_title.Test04TitleAPI" name="test_04_titles_name_length_validation" time="0.090"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_04_title.Test04TitleAPI object at 0x000001738AD70DD0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AEEAFD0&gt;
+
+    def test_04_titles_name_length_validation(self, admin_client):
+&gt;       genres = create_genre(admin_client)
+
+tests\test_04_title.py:279: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AEEAFD0&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_04_title.Test04TitleAPI" name="test_05_titles_check_permission" time="0.235"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_04_title.Test04TitleAPI object at 0x000001738AD72190&gt;, client = &lt;django.test.client.Client object at 0x000001738AFAD810&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B267390&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738B0BD5D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B0BEC90&gt;
+
+    def test_05_titles_check_permission(self, client, user_client,
+                                        moderator_client, admin_client):
+&gt;       titles, categories, genres = create_titles(admin_client)
+
+tests\test_04_title.py:327: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B0BEC90&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_04_title.Test04TitleAPI" name="test_06_titles_detail_put_not_allowed" time="0.169"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_04_title.Test04TitleAPI object at 0x000001738B264550&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AEEA790&gt;, user = &lt;User: TestUser&gt;
+
+    def test_06_titles_detail_put_not_allowed(self, admin_client, user):
+&gt;       titles, _, _ = create_titles(admin_client)
+
+tests\test_04_title.py:345: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AEEA790&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_05_review.Test05ReviewAPI" name="test_01_review_not_auth" time="0.238"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_05_review.Test05ReviewAPI object at 0x000001738AEE9FD0&gt;, client = &lt;django.test.client.Client object at 0x000001738A7BA110&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AED0850&gt;
+admin = &lt;User: TestAdmin&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738AED2E50&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738A805B50&gt;
+moderator = &lt;User: TestModerator&gt;
+
+    def test_01_review_not_auth(self, client, admin_client, admin, user_client,
+                                user, moderator_client, moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_05_review.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AED0850&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_05_review.Test05ReviewAPI" name="test_02_review_post" time="0.243"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_05_review.Test05ReviewAPI object at 0x000001738AA1DBD0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2F9150&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B2FA350&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738B2FB7D0&gt;, admin = &lt;User: TestAdmin&gt;
+
+    def test_02_review_post(self, admin_client, user_client,
+                            moderator_client, admin):
+&gt;       titles, _, _ = create_titles(admin_client)
+
+tests\test_05_review.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2F9150&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_05_review.Test05ReviewAPI" name="test_03_review_detail_get" time="0.240"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_05_review.Test05ReviewAPI object at 0x000001738AED1990&gt;, client = &lt;django.test.client.Client object at 0x000001738AE30610&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE32050&gt;
+admin = &lt;User: TestAdmin&gt;, user = &lt;User: TestUser&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738A73A950&gt;, moderator = &lt;User: TestModerator&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738A738D90&gt;
+
+    def test_03_review_detail_get(self, client, admin_client, admin, user,
+                                  user_client, moderator, moderator_client):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_05_review.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE32050&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_05_review.Test05ReviewAPI" name="test_04_review_detail_user" time="0.240"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_05_review.Test05ReviewAPI object at 0x000001738AE0E790&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2E9E50&gt;, admin = &lt;User: TestAdmin&gt;, user = &lt;User: TestUser&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738AEBB310&gt;, moderator = &lt;User: TestModerator&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AEBA110&gt;
+
+    def test_04_review_detail_user(self, admin_client, admin, user,
+                                   user_client, moderator, moderator_client):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_05_review.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2E9E50&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_05_review.Test05ReviewAPI" name="test_05_reviews_detail_moderator_and_admin" time="0.239"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_05_review.Test05ReviewAPI object at 0x000001738A807550&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B07EAD0&gt;, admin = &lt;User: TestAdmin&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738AE25790&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AE278D0&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_05_reviews_detail_moderator_and_admin(self, admin_client, admin,
+                                                   user_client, user,
+                                                   moderator_client,
+                                                   moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_05_review.py:354: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B07EAD0&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_05_review.Test05ReviewAPI" name="test_06_reviews_detail_put_not_allowed" time="0.235"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_05_review.Test05ReviewAPI object at 0x000001738AE31510&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AD98810&gt;, admin = &lt;User: TestAdmin&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738AE1A210&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AE1BFD0&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_06_reviews_detail_put_not_allowed(
+            self, admin_client, admin, user_client, user, moderator_client,
+            moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_05_review.py:403: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AD98810&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_01_comment_not_auth" time="0.239"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738A983AD0&gt;, client = &lt;django.test.client.Client object at 0x000001738B2C5310&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2C5110&gt;
+admin = &lt;User: TestAdmin&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B2C6DD0&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738A792D10&gt;
+moderator = &lt;User: TestModerator&gt;
+
+    def test_01_comment_not_auth(self, client, admin_client, admin,
+                                 user_client, user, moderator_client,
+                                 moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_06_comment.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2C5110&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_02_comment" time="0.238"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738AE26C50&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B0BC710&gt;, admin = &lt;User: TestAdmin&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738B0BDF50&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738A763F90&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_02_comment(self, admin_client, admin, user_client, user,
+                        moderator_client, moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       reviews, titles = create_reviews(admin_client, author_map)
+
+tests\test_06_comment.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B0BC710&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_03_comment_detail_get" time="0.237"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738A809F10&gt;, client = &lt;django.test.client.Client object at 0x000001738AE51390&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE33D50&gt;
+admin = &lt;User: TestAdmin&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738B272D50&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738B270F10&gt;
+moderator = &lt;User: TestModerator&gt;
+
+    def test_03_comment_detail_get(self, client, admin_client, admin,
+                                   user_client, user, moderator_client,
+                                   moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       comments, reviews, titles = create_comments(admin_client, author_map)
+
+tests\test_06_comment.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:267: in create_comments
+    reviews, titles = create_reviews(admin_client, authors_map)
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738AE33D50&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_04_comment_detail__user_patch_delete" time="0.237"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738AE1EC90&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2E80D0&gt;, admin = &lt;User: TestAdmin&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738B2E8890&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AFC2690&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_04_comment_detail__user_patch_delete(self, admin_client, admin,
+                                                  user_client, user,
+                                                  moderator_client,
+                                                  moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       comments, reviews, titles = create_comments(admin_client, author_map)
+
+tests\test_06_comment.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:267: in create_comments
+    reviews, titles = create_reviews(admin_client, authors_map)
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2E80D0&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_05_comment_detail_admin_and_moderator" time="0.240"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738AE24690&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2661D0&gt;, admin = &lt;User: TestAdmin&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738AD72550&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AD70350&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_05_comment_detail_admin_and_moderator(self, admin_client, admin,
+                                                   user_client, user,
+                                                   moderator_client,
+                                                   moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       comments, reviews, titles = create_comments(admin_client, author_map)
+
+tests\test_06_comment.py:254: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:267: in create_comments
+    reviews, titles = create_reviews(admin_client, authors_map)
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2661D0&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_06_comment_detail_not_auth" time="0.237"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738AE184D0&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A778410&gt;, admin = &lt;User: TestAdmin&gt;
+client = &lt;django.test.client.Client object at 0x000001738A778190&gt;, user_client = &lt;rest_framework.test.APIClient object at 0x000001738A7787D0&gt;, user = &lt;User: TestUser&gt;
+moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AE6E990&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_06_comment_detail_not_auth(self, admin_client, admin, client,
+                                        user_client, user, moderator_client,
+                                        moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       comments, reviews, titles = create_comments(admin_client, author_map)
+
+tests\test_06_comment.py:308: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:267: in create_comments
+    reviews, titles = create_reviews(admin_client, authors_map)
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738A778410&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase><testcase classname="tests.test_06_comment.Test06CommentAPI" name="test_07_comment_detail_put_not_allowed" time="0.254"><failure message="AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.">self = &lt;tests.test_06_comment.Test06CommentAPI object at 0x000001738AED6610&gt;, admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2706D0&gt;, admin = &lt;User: TestAdmin&gt;
+user_client = &lt;rest_framework.test.APIClient object at 0x000001738AE7A110&gt;, user = &lt;User: TestUser&gt;, moderator_client = &lt;rest_framework.test.APIClient object at 0x000001738AE7B110&gt;, moderator = &lt;User: TestModerator&gt;
+
+    def test_07_comment_detail_put_not_allowed(
+            self, admin_client, admin, user_client, user, moderator_client,
+            moderator):
+        author_map = {
+            admin: admin_client,
+            user: user_client,
+            moderator: moderator_client
+        }
+&gt;       comments, reviews, titles = create_comments(admin_client, author_map)
+
+tests\test_06_comment.py:354: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\utils.py:267: in create_comments
+    reviews, titles = create_reviews(admin_client, authors_map)
+tests\utils.py:248: in create_reviews
+    titles, _, _ = create_titles(admin_client)
+tests\utils.py:217: in create_titles
+    genres = create_genre(admin_client)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+admin_client = &lt;rest_framework.test.APIClient object at 0x000001738B2706D0&gt;
+
+    def create_genre(admin_client):
+        result = []
+        data = {'name': 'Ужасы', 'slug': 'horror'}
+        result.append(data)
+        response = admin_client.post('/api/v1/genres/', data=data)
+&gt;       assert response.status_code == HTTPStatus.CREATED, (
+            'Если POST-запрос администратора к `/api/v1/genres/` содержит '
+            'корректные данные - должен вернуться ответ со статусом 201.'
+        )
+E       AssertionError: Если POST-запрос администратора к `/api/v1/genres/` содержит корректные данные - должен вернуться ответ со статусом 201.
+
+tests\utils.py:203: AssertionError</failure></testcase></testsuite></testsuites>
