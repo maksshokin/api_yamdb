@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
+from django.core.validators import RegexValidator
+
 User = get_user_model() 
 
 
@@ -16,11 +18,25 @@ class BaseModel(models.Model):
 
  
 class Category(models.Model):
-    pass
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(
+        max_length=50,
+        unique=True,
+        validators=[RegexValidator(regex=r'^[-a-zA-Z0-9_]+$',
+        message='Invalid slug format')
+        ]
+    )
 
 
 class Genre(models.Model):
-    pass
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(
+        max_length=50,
+        unique=True,
+        validators=[RegexValidator(regex=r'^[-a-zA-Z0-9_]+$',
+        message='Invalid slug format')
+        ]
+    )
 
 
 class Title(models.Model):
