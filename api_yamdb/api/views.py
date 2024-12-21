@@ -5,16 +5,17 @@ from api.serializers import (
     TokenSerializer,
     CategorySerializer,
     GenreSerializer,
-    TitleSerializer
+    TitleSerializer,
+    CommentSerializer
 )
-from api.permissions import IsSuperUserOrAdmin
+from api.permissions import IsSuperUserOrAdmin, IsOwnerOrReadOnly
 from api_yamdb.settings import EMAIL
 from reviews.models import (
     User,
     Category,
     Genre,
     Review,
-    Title
+    Title,
 )
 
 from django.core.mail import send_mail
@@ -134,3 +135,19 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     permission_classes = (IsSuperUserOrAdmin,)
 
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, id=review_id)
+        return review.comments.all()
+
+    def perform_create(self, serializer):
+        review_id = self.kwargs.get('review_id')
+        review = get_object_or_404(Review, pk=review_id)
+        serializer.save(author=self.request.user, review=review)
+
+    

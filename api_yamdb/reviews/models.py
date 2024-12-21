@@ -72,21 +72,6 @@ class Title(models.Model):
         return self.name
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments')
-    review = models.OneToOneField(
-        'Review',
-        on_delete=models.CASCADE,
-        related_name='comment',
-        null=True,
-        blank=True
-    )
-    text = models.TextField()
-    created = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
-
-
 class Review(models.Model):
     title = models.ForeignKey(
         Title, related_name='reviews', on_delete=models.CASCADE
@@ -103,3 +88,21 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.author.username} on {self.title.name}"
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments')
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        null=True,
+        blank=True
+    )
+    text = models.TextField()
+    created = models.DateTimeField(
+        'Дата добавления', auto_now_add=True, db_index=True)
+    
+
+
