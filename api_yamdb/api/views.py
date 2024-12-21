@@ -78,7 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 
-class TokenViewSet(viewsets.GenericViewSet):
+class TokenViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = TokenSerializer
     permission_classes = (permissions.AllowAny,)
@@ -97,7 +97,7 @@ class TokenViewSet(viewsets.GenericViewSet):
         message = {'confirmation_code': 'Неверный код подтверждения'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
-class SingUpViewSet(viewsets.GenericViewSet):
+class SingUpViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = SingUpSerializer
     permission_classes = (permissions.AllowAny,)
