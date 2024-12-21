@@ -101,7 +101,7 @@ class Comment(models.Model):
         blank=True
     )
     text = models.TextField()
-    created = models.DateTimeField(
+    pub_date = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
     
 

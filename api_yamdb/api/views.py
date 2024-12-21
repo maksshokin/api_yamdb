@@ -25,6 +25,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 
 
 class ReviewListCreateView(generics.ListCreateAPIView):
@@ -33,7 +34,7 @@ class ReviewListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
-        return Review.objects.filter(title_id=title_id)
+        return Review.objects.filter(title_id=title_id).order_by('-pub_date')
 
     def perform_create(self, serializer):
         title_id = self.kwargs.get('title_id')
@@ -122,28 +123,32 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (IsSuperUserOrAdmin,)
+    queryset = Category.objects.all().order_by('name')
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = (IsSuperUserOrAdmin,)
+    queryset = Genre.objects.all().order_by('name')
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
     permission_classes = (IsSuperUserOrAdmin,)
+    queryset = Title.objects.all().order_by('name')
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    pagination_class = PageNumberPagination
 
     def get_queryset(self):
         review_id = self.kwargs.get('review_id')
         review = get_object_or_404(Review, id=review_id)
-        return review.comments.all()
+        return review.comments.all().order_by('-pub_date')
 
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')

@@ -72,11 +72,15 @@ class TokenSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
+    pub_date = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Review
         fields = ['id', 'text', 'score', 'author', 'pub_date']
         read_only_fields = ['id', 'author', 'pub_date']
+
+    def get_pub_date(self, obj):
+        return obj.pub_date.strftime('%Y-%m-%d')
 
     def validate_score(self, value):
         if not 1 <= value <= 10:
@@ -136,5 +140,5 @@ class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(slug_field='username', read_only=True)
 
     class Meta:
-        fields = ('id', 'text', 'author', 'created')
+        fields = ('id', 'text', 'author', 'pub_date')
         model = Comment
