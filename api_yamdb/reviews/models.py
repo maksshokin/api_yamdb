@@ -4,11 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class User(AbstractUser):
-    ROLE_CHOICES = (
-        ('user', 'User'),
-        ('moderator', 'Moderator'),
-        ('admin', 'Administrator'),
-    )
+
     username = models.CharField(
         max_length=150,
         unique=True,

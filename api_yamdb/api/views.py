@@ -62,7 +62,8 @@ class UserViewSet(viewsets.GenericViewSet):
     @action(
         methods=['GET', 'PATCH'],
         detail=False,
-        url_path='me'
+        permission_classes=(permissions.IsAuthenticated,),
+        url_path='me',
     )
     def user_info(self, request):
         serializer = UserSerializer(request.user)
