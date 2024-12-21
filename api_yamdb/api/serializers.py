@@ -1,4 +1,5 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from django.utils.text import slugify
 from reviews.models import (
     User,
     Category,
@@ -106,6 +107,15 @@ class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ['name', 'slug']
+
+    def create(self, validated_data):
+        slug = validated_data.get('slug') or slugify(validated_data['name'])
+        i = 1
+        while Genre.objects.filter(slug=slug).exists():
+            slug = f"{slugify(validated_data['name'])}-{i}"
+            i += 1
+        validated_data['slug'] = slug
+        return super().create(validated_data)
 
 
 class TitleSerializer(serializers.ModelSerializer):

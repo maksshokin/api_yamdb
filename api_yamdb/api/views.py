@@ -77,7 +77,6 @@ class UserViewSet(viewsets.ModelViewSet):
         )
 
 
-
 class TokenViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = TokenSerializer
@@ -96,6 +95,7 @@ class TokenViewSet(viewsets.ModelViewSet):
             return Response(message, status=status.HTTP_200_OK)
         message = {'confirmation_code': 'Неверный код подтверждения'}
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
 
 class SingUpViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -120,17 +120,17 @@ class SingUpViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (IsSuperUserOrAdmin,)
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (IsSuperUserOrAdmin,)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = TitleSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (IsSuperUserOrAdmin,)
 
