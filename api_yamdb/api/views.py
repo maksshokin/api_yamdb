@@ -55,6 +55,7 @@ class UserViewSet(viewsets.GenericViewSet):
     serializer_class = (AdminSerializer,)
     permission_classes = (
         IsSuperUserOrAdmin,
+        permissions.IsAuthenticated,
     )
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
@@ -62,7 +63,8 @@ class UserViewSet(viewsets.GenericViewSet):
     @action(
         methods=['GET', 'PATCH'],
         detail=False,
-        url_path='me')
+        url_path='me'
+    )
     def user_info(self, request):
         serializer = AdminSerializer(request.user)
         if request.method == 'GET':
