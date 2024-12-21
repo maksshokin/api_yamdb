@@ -43,18 +43,6 @@ class User(AbstractUser):
         blank=False,
     )
 
-    @property
-    def is_user(self):
-        return self.role == 'user'
-
-    @property
-    def is_admin(self):
-        return self.role == 'admin'
-
-    @property
-    def is_moderator(self):
-        return self.role == 'moderator'
-
     def __str__(self):
         return self.username
 

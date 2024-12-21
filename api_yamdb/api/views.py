@@ -1,6 +1,5 @@
 from api.serializers import (
-    AdminSerializer,
-    NotAdminSerializer,
+    UserSerializer,
     SingUpSerializer,
     ReviewSerializer,
     TokenSerializer,
@@ -52,7 +51,7 @@ class ReviewRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = (AdminSerializer,)
+    serializer_class = (UserSerializer,)
     permission_classes = (
         IsSuperUserOrAdmin,
         permissions.IsAuthenticated,
@@ -66,21 +65,9 @@ class UserViewSet(viewsets.GenericViewSet):
         url_path='me'
     )
     def user_info(self, request):
-        serializer = AdminSerializer(request.user)
+        serializer = UserSerializer(request.user)
         if request.method == 'GET':
             return Response(serializer.data)
-        if request.user.is_admin:
-            serializer = AdminSerializer(
-                request.user,
-                data=request.data,
-                partial=True
-            )
-        else:
-            serializer = NotAdminSerializer(
-                request.user,
-                data=request.data,
-                partial=True
-            )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(

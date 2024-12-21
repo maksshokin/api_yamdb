@@ -8,7 +8,7 @@ from reviews.models import (
 )
 
 
-class AdminSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
@@ -19,20 +19,6 @@ class AdminSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
-
-class NotAdminSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
-        )
-        read_only_fields = ('role',)
 
 
 class SingUpSerializer(serializers.ModelSerializer):
@@ -69,29 +55,6 @@ class TokenSerializer(serializers.ModelSerializer):
             'username',
             'confirmation_code'
         )
-
-
-class CategorySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Category
-        fields = ['name', 'slug']
-
-
-class GenreSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = Genre
-        fields = ['name', 'slug']
-
-
-class TitleSerializer(serializers.ModelSerializer):
-    genre = GenreSerializer(many=True)
-    category = CategorySerializer()
-
-    class Meta:
-        model = Title
-        fields = '__all__'
 
 
 class ReviewSerializer(serializers.ModelSerializer):
