@@ -65,8 +65,8 @@ class UserViewSet(viewsets.GenericViewSet):
         permission_classes=(permissions.IsAuthenticated,),
         url_path='me',
     )
-    def user_info(self, request):
-        serializer = UserSerializer(request.user)
+    def get_user_info(self, request):
+        serializer = UserSerializer(request.user, data=request.data,)
         if request.method == 'GET':
             return Response(serializer.data)
         serializer.is_valid(raise_exception=True)
