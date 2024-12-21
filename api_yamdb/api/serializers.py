@@ -49,6 +49,17 @@ class TokenSerializer(serializers.ModelSerializer):
         required=True
     )
 
+    def validate(self, data):
+        if User.objects.filter(username=data.get('username')):
+            raise serializers.ValidationError(
+                'Имя занято'
+            )
+        if User.objects.filter(email=data.get('email')):
+            raise serializers.ValidationError(
+                'email уже используется'
+            )
+        return data
+
     class Meta:
         model = User
         fields = (
