@@ -120,13 +120,21 @@ class SingUpViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (permissions.IsAdminUser,)
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny,]
+        return [permissions.IsAdminUser,]
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (permissions.IsAdminUser,)
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [permissions.AllowAny,]
+        return [permissions.IsAdminUser,]
 
 
 class TitleViewSet(viewsets.ModelViewSet):
@@ -134,6 +142,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     serializer_class = TitleSerializer
     
     def get_permissions(self):
-        if self.request.method in ['GET']:
+        if self.request.method in ['list', 'retrieve']:
             return [permissions.AllowAny,]
         return (permissions.IsAdminUser,)
