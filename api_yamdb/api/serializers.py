@@ -1,4 +1,5 @@
-from rest_framework import serializers, status
+from rest_framework import serializers
+from django.db.models import Avg
 from django.utils.text import slugify
 from reviews.models import (
     User,
@@ -124,16 +125,32 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre = serializers.SlugRelatedField(
+    genre = genre = serializers.SlugRelatedField(
         slug_field='slug', queryset=Genre.objects.all(), many=True
-    )
+    ) 
     category = serializers.SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
     )
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Title
         fields = '__all__'
+
+    def get_rating(self, obj):
+        rating = obj.reviews.aggregate(Avg('score'))['score__avg']
+        return rating if rating is not None else None
+    
+    def to_representation(self, instance):
+        self.fields['category'] = CategorySerializer()
+        return super().to_representation(instance)
+    
+    def create(self, validated_data):
+        genres = validated_data.pop('genre')
+        title = Title.objects.create(**validated_data)
+        for genre in genres:
+            title.genre.add(genre)
+        return title
 
 
 class CommentSerializer(serializers.ModelSerializer):

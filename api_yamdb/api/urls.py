@@ -8,7 +8,7 @@ from api.views import (
     CategoryViewSet,
     GenreViewSet,
     ReviewListCreateView,
-    ReviewRetrieveUpdateDestroyView,
+    ReviewRetrievePatchDestroyView,
     TitleViewSet,
     CommentViewSet
 )
@@ -35,13 +35,6 @@ v1_router.register(
     TitleViewSet,
     basename='titles'
 )
-v1_router.register(
-    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
-    CommentViewSet,
-    basename='comments'
-)
-
-
 
 
 urlpatterns = [
@@ -62,8 +55,10 @@ urlpatterns = [
     ),
     path(
         'titles/<int:title_id>/reviews/<int:pk>/',
-        ReviewRetrieveUpdateDestroyView.as_view(),
+        ReviewRetrievePatchDestroyView.as_view(),
         name='review-detail'
     ),
+    path('titles/<int:title_id>/reviews/<int:review_id>/comments/', CommentViewSet.as_view(actions={'get': 'list', 'post': 'create'}), name='create_comment'),
+    path('titles/<int:title_id>/reviews/<int:review_id>/comments/<int:pk>/', CommentViewSet.as_view(actions={'get': 'retrieve', 'delete': 'destroy', 'patch': 'partial_update'}), name='comment-detail'),
     path('', include(v1_router.urls)),
 ]
