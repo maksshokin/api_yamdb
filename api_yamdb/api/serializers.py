@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
+ 
 class AdminUserSerializer(serializers.ModelSerializer):
     
     class Meta:
