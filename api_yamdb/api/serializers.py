@@ -13,7 +13,20 @@ from reviews.models import (
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.CharField(read_only=True)
+    
+    class Meta:
+        model = User
+        fields = (
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
+        )
 
+class AdminUserSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = User
         fields = (

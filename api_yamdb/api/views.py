@@ -1,5 +1,6 @@
 from api.serializers import (
     UserSerializer,
+    AdminUserSerializer,
     SingUpSerializer,
     ReviewSerializer,
     TokenSerializer,
@@ -68,7 +69,7 @@ class ReviewRetrievePatchDestroyView(
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = (UserSerializer,)
+    serializer_class = (AdminUserSerializer,)
     permission_classes = (
         permissions.IsAuthenticated,
         permissions.IsAdminUser,

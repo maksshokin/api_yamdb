@@ -3,8 +3,13 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
-class User(AbstractUser):
+ROLES = (
+    ('user', 'user'),
+    ('moderator', 'moderator'),
+    ('admin', 'admin'),
+)
 
+class User(AbstractUser):
     username = models.CharField(
         max_length=150,
         unique=True,
@@ -19,6 +24,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         max_length=20,
+        choices=ROLES,
         default='user',
         blank=True,
     )
