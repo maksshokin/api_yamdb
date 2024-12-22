@@ -9,6 +9,25 @@ class IsSuperUserOrAdmin(permissions.BasePermission):
 
         return (
             request.user.is_authenticated and (
-                request.user.role == 'admin' or request.user.is_superuser
+                request.user.role == 'admin' or request.user.role == 'moderator' or request.user.is_superuser
+            )
+        )
+    
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return obj.author == request.user
+    
+
+class IsOwnerOrStaff(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return (
+            request.method in permissions.SAFE_METHODS or (
+                request.user.is_authenticated and (
+                    obj.author == request.user or request.user.is_superuser or request.user.role in ('admin', 'moderator')
+                )
             )
         )
