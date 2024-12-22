@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-from reviews.validatiors import validate_username
+from reviews.validators import validate_username
 
 
 ROLES = (
