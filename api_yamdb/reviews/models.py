@@ -1,17 +1,23 @@
 from django.db import models
-
-from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
-
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator, MaxValueValidator
 
+from reviews.validatiors import validate_username
+
+
+ROLES = (
+    ('user', 'user'),
+    ('moderator', 'moderator'),
+    ('admin', 'admin'),
+)
 
 class User(AbstractUser):
-
     username = models.CharField(
         max_length=150,
         unique=True,
         blank=False,
         null=False,
+        validators=(validate_username,)
     )
     email = models.EmailField(
         max_length=254,
@@ -21,6 +27,7 @@ class User(AbstractUser):
     )
     role = models.CharField(
         max_length=20,
+        choices=ROLES,
         default='user',
         blank=True,
     )
@@ -41,28 +48,32 @@ class User(AbstractUser):
         blank=False,
     )
 
+    @property
+    def is_moderator(self):
+        return self.role == 'moderator'
+
+    @property
+    def is_admin(self):
+        return self.role == 'admin'
+
     def __str__(self):
         return self.username
+    
+    class Meta:
+        ordering = ('id',)
 
 
-class BaseModel(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=256)
-    slug = models.SlugField(
-        max_length=50,
-        unique=True,
-        validators=[RegexValidator(regex=r'^[-a-zA-Z0-9_]+$', message='Invalid slug format')]
-    )
+    slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
+    
 
- 
-class Category(BaseModel):
-    pass
-
-
-class Genre(BaseModel):
-    pass
+class Genre(models.Model):
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(max_length=50, unique=True)
 
 
 class Title(models.Model):
@@ -81,21 +92,6 @@ class Title(models.Model):
         return self.name
 
 
-class Comment(models.Model):
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments')
-    review = models.OneToOneField(
-        'Review',
-        on_delete=models.CASCADE,
-        related_name='comment',
-        null=True,
-        blank=True
-    )
-    text = models.TextField()
-    created = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
-
-
 class Review(models.Model):
     title = models.ForeignKey(
         Title, related_name='reviews', on_delete=models.CASCADE
@@ -112,3 +108,18 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.author.username} on {self.title.name}"
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments')
+    review = models.ForeignKey(
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        null=True,
+        blank=True
+    )
+    text = models.TextField()
+    pub_date = models.DateTimeField(
+        'Дата добавления', auto_now_add=True, db_index=True)
