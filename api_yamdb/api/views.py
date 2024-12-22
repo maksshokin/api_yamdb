@@ -22,7 +22,7 @@ from reviews.models import (
 
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
-from rest_framework import filters, viewsets, status, permissions, generics, mixins
+from rest_framework import filters, viewsets, status, permissions, generics, mixins, pagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -74,9 +74,7 @@ class UserViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated,
         permissions.IsAdminUser,
     )
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('username',)
-    
+
 
     @action(
         methods=['GET', 'PATCH'],
@@ -84,25 +82,23 @@ class UserViewSet(viewsets.ModelViewSet):
         permission_classes=(permissions.IsAuthenticated,),
         url_path='me',
     )
-    def get_user_info(self, request):
+    def me(self, request):
         if request.method == 'GET':
             serializer = UserSerializer(request.user,)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        elif request.user.is_admin:
-                serializer = AdminUserSerializer(
-                    request.user,
-                    data=request.data,
-                    partial=True
-                )
-        else:
-            serializer = UserSerializer(
-                request.user,
-                data=request.data,
-                partial=True
+            return Response(serializer.data)
+        if request.method == 'PATCH':
+            user = get_object_or_404(User, username=self.request.user)
+            if user.role == 'admin':
+                serializer = AdminUserSerializer(user, data=request.data, partial=True)
+            else:
+                serializer = UserSerializer(user, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                serializer.data,
+                status=status.HTTP_400_BAD_REQUEST
             )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class TokenViewSet(viewsets.ModelViewSet):

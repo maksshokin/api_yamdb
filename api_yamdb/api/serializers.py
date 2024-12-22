@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.db.models import Avg
 from django.utils.text import slugify
+from rest_framework.validators import UniqueValidator
 
 from reviews.models import (
     User,
@@ -13,7 +14,7 @@ from reviews.models import (
 
 
 class UserSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = User
         fields = (
@@ -25,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
             'role'
         )
         read_only_fields = ('role',)
+        lookup_field = 'username'
 
 
 class AdminUserSerializer(serializers.ModelSerializer):
@@ -39,9 +41,10 @@ class AdminUserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-
+    
 
 class SingUpSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = (
@@ -57,6 +60,10 @@ class SingUpSerializer(serializers.ModelSerializer):
         if User.objects.filter(username=data.get('username')):
             raise serializers.ValidationError(
                 'Это имя занято!'
+            )
+        if 'me' == data.get('username'):
+            raise serializers.ValidationError(
+                'Нельзя использовать me!'
             )
         return data
 

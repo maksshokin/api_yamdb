@@ -1,15 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
-
-from reviews.validatiors import validate_username
 
 
-ROLES = (
-    ('user', 'user'),
-    ('moderator', 'moderator'),
-    ('admin', 'admin'),
-)
+ADMIN = 'admin'
+MODERATOR = 'moderator'
+USER = 'user'
+ROLES = [
+    (USER, 'user'),
+    (MODERATOR, 'moderator'),
+    (ADMIN, 'admin'),
+]
 
 class User(AbstractUser):
     username = models.CharField(
@@ -17,7 +17,6 @@ class User(AbstractUser):
         unique=True,
         blank=False,
         null=False,
-        validators=(validate_username,)
     )
     email = models.EmailField(
         max_length=254,
@@ -48,18 +47,12 @@ class User(AbstractUser):
         blank=False,
     )
 
-    @property
-    def is_moderator(self):
-        return self.role == 'moderator'
-
-    @property
-    def is_admin(self):
-        return self.role == 'admin'
-
     def __str__(self):
         return self.username
-    
+
     class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
         ordering = ('id',)
 
 

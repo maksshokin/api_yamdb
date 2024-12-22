@@ -7,12 +7,9 @@ class IsSuperUserOrAdmin(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return (
-            request.user.is_authenticated and (
-                request.user.role == 'admin' or request.user.role == 'moderator' or request.user.is_superuser
-            )
-        )
-    
+        if request.user.is_authenticated:
+            return request.user.role == 'admin' or request.user.role == 'moderator'
+        return False
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
 
