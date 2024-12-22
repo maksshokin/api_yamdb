@@ -8,8 +8,9 @@ from api.views import (
     CategoryViewSet,
     GenreViewSet,
     ReviewListCreateView,
-    ReviewRetrieveUpdateDestroyView,
-    TitleViewSet
+    ReviewRetrievePatchDestroyView,
+    TitleViewSet,
+    CommentViewSet
 )
 
 v1_router = DefaultRouter()
@@ -36,7 +37,6 @@ v1_router.register(
 )
 
 
-
 urlpatterns = [
     path(
         'auth/signup/',
@@ -53,8 +53,12 @@ urlpatterns = [
         ReviewListCreateView.as_view(),
         name='review-list'
     ),
-    path('titles/<int:title_id>/reviews/<int:pk>/',
-        ReviewRetrieveUpdateDestroyView.as_view(),
-        name='review-detail'),
+    path(
+        'titles/<int:title_id>/reviews/<int:pk>/',
+        ReviewRetrievePatchDestroyView.as_view(),
+        name='review-detail'
+    ),
+    path('titles/<int:title_id>/reviews/<int:review_id>/comments/', CommentViewSet.as_view(actions={'get': 'list', 'post': 'create'}), name='create_comment'),
+    path('titles/<int:title_id>/reviews/<int:review_id>/comments/<int:pk>/', CommentViewSet.as_view(actions={'get': 'retrieve', 'delete': 'destroy', 'patch': 'partial_update'}), name='comment-detail'),
     path('', include(v1_router.urls)),
 ]
