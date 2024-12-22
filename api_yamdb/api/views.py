@@ -88,7 +88,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.method == 'GET':
             serializer = UserSerializer(request.user,)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        if request.user.is_admin:
+        elif request.user.is_admin:
                 serializer = AdminUserSerializer(
                     request.user,
                     data=request.data,

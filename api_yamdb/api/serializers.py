@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.db.models import Avg
 from django.utils.text import slugify
+
 from reviews.models import (
     User,
     Category,
@@ -12,7 +13,6 @@ from reviews.models import (
 
 
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(read_only=True)
     
     class Meta:
         model = User
@@ -24,7 +24,9 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
- 
+        read_only_fields = ('role',)
+
+
 class AdminUserSerializer(serializers.ModelSerializer):
     
     class Meta:
@@ -37,6 +39,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
+
 
 class SingUpSerializer(serializers.ModelSerializer):
     class Meta:
