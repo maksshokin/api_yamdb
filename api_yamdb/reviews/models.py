@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from reviews.validatiors import validate_username
+
 
 ROLES = (
     ('user', 'user'),
@@ -15,6 +17,7 @@ class User(AbstractUser):
         unique=True,
         blank=False,
         null=False,
+        validators=(validate_username,)
     )
     email = models.EmailField(
         max_length=254,
