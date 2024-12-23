@@ -3,14 +3,14 @@ from rest_framework.routers import DefaultRouter
 
 from api.views import (
     UserViewSet,
-    TokenViewSet,
-    SingUpViewSet,
     CategoryViewSet,
     GenreViewSet,
     ReviewListCreateView,
     ReviewRetrievePatchDestroyView,
     TitleViewSet,
-    CommentViewSet
+    CommentViewSet,
+    singup,
+    token
 )
 
 v1_router = DefaultRouter()
@@ -40,12 +40,12 @@ v1_router.register(
 urlpatterns = [
     path(
         'auth/signup/',
-        SingUpViewSet.as_view({'post': 'post'}),
-        name='signup'
+        singup,
+        name='singup',
     ),
     path(
         'auth/token/',
-        TokenViewSet.as_view({'post': 'post'}),
+        token,
         name='token'
     ),
     path(
