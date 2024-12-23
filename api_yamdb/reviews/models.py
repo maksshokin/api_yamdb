@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 
 from reviews.validators import validate_username
 
@@ -63,30 +63,62 @@ class User(AbstractUser):
         ordering = ('id',)
 
 
-class Category(models.Model):
+class BaseModel(models.Model):
     name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
+    slug = models.SlugField(
+        max_length=50,
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex=r'^[-a-zA-Z0-9_]+$',
+                message='Invalid slug format'
+            )
+        ]
+    )
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return self.name
-    
 
-class Genre(models.Model):
-    name = models.CharField(max_length=256)
-    slug = models.SlugField(max_length=50, unique=True)
+
+class Category(BaseModel):
+    
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+        ordering = ['name']
+
+
+class Genre(BaseModel):
+    
+    class Meta:
+        verbose_name = "Жанр"
+        verbose_name_plural = "Жанры"
+        ordering = ['name']
 
 
 class Title(models.Model):
     name = models.CharField(max_length=256)
-    year = models.PositiveIntegerField()
+    year = models.PositiveIntegerField(
+        validators=[
+            MinValueValidator(0, message="Год не может быть отрицательным.")
+        ]
+    )
     description = models.TextField(blank=True, null=True)
-    genre = models.ManyToManyField(Genre)
+    genre = models.ManyToManyField(Genre, related_name='titles')
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
         null=True,
         related_name='titles'
     )
+
+    class Meta:
+        verbose_name = "Произведение"
+        verbose_name_plural = "Произведения"
+        ordering = ['name']
 
     def __str__(self):
         return self.name

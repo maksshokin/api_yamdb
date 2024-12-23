@@ -142,11 +142,14 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre = genre = serializers.SlugRelatedField(
-        slug_field='slug', queryset=Genre.objects.all(), many=True
-    ) 
+    genre = serializers.SlugRelatedField(
+        queryset=Genre.objects.all(),
+        many=True,
+        slug_field='slug'
+    )
     category = serializers.SlugRelatedField(
-        slug_field='slug', queryset=Category.objects.all()
+        queryset=Category.objects.all(),
+        slug_field='slug'
     )
     rating = serializers.SerializerMethodField()
 
@@ -158,15 +161,10 @@ class TitleSerializer(serializers.ModelSerializer):
         rating = obj.reviews.aggregate(Avg('score'))['score__avg']
         return rating if rating is not None else None
     
-    def to_representation(self, instance):
-        self.fields['category'] = CategorySerializer()
-        return super().to_representation(instance)
-    
     def create(self, validated_data):
         genres = validated_data.pop('genre')
         title = Title.objects.create(**validated_data)
-        for genre in genres:
-            title.genre.add(genre)
+        title.genre.set(genres)
         return title
 
 
