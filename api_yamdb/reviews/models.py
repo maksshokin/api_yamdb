@@ -51,6 +51,7 @@ class User(AbstractUser, ValidateUsername):
     def __str__(self):
         return self.username
 
+
 class Category(models.Model):
     name = models.CharField(max_length=256)
     slug = models.SlugField(max_length=50, unique=True)
@@ -111,6 +112,3 @@ class Comment(models.Model):
     text = models.TextField()
     pub_date = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
-    
-
-

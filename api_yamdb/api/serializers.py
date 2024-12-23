@@ -34,7 +34,7 @@ class SingupSerializer(serializers.Serializer, ValidateUsername):
     )
     email = serializers.EmailField(
         required=True,
-        max_length=255
+        max_length=254
     )
 
 
@@ -95,26 +95,25 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
         fields = ['name', 'slug']
 
+    def validate_slug(self, value):
+        if Category.objects.filter(slug=value).exists():
+            raise serializers.ValidationError("Этот slug уже используется.")
+        return value
+
 
 class GenreSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Genre
         fields = ['name', 'slug']
 
-    def create(self, validated_data):
-        slug = validated_data.get('slug') or slugify(validated_data['name'])
-        i = 1
-        while Genre.objects.filter(slug=slug).exists():
-            slug = f"{slugify(validated_data['name'])}-{i}"
-            i += 1
-        validated_data['slug'] = slug
-        return super().create(validated_data)
+    def validate_slug(self, value):
+        if self.instance is None and Genre.objects.filter(slug=value).exists():
+            raise serializers.ValidationError("Этот slug уже используется.")
+        return value
 
 
 class TitleSerializer(serializers.ModelSerializer):
@@ -133,17 +132,22 @@ class TitleSerializer(serializers.ModelSerializer):
     def get_rating(self, obj):
         rating = obj.reviews.aggregate(Avg('score'))['score__avg']
         return rating if rating is not None else None
-    
+
     def to_representation(self, instance):
         self.fields['category'] = CategorySerializer()
         return super().to_representation(instance)
-    
+
     def create(self, validated_data):
         genres = validated_data.pop('genre')
         title = Title.objects.create(**validated_data)
         for genre in genres:
             title.genre.add(genre)
         return title
+
+    def validate_name(self, value):
+        if len(value) > 256:
+            raise serializers.ValidationError("Название произведения не может быть длиннее 256 символов.")
+        return value
 
 
 class CommentSerializer(serializers.ModelSerializer):

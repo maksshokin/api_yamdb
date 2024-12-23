@@ -159,46 +159,69 @@ class ReviewRetrievePatchDestroyView(
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('name')
     serializer_class = CategorySerializer
     permission_classes = (IsSuperUserOrAdmin,)
-    queryset = Category.objects.all().order_by('name')
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'slug']
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 
 class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genre.objects.all()
+    queryset = Genre.objects.all().order_by('name')
     serializer_class = GenreSerializer
     permission_classes = (IsSuperUserOrAdmin,)
-    queryset = Genre.objects.all().order_by('name')
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-    permission_classes = (IsSuperUserOrAdmin,)
     queryset = Title.objects.all().order_by('name')
+    serializer_class = TitleSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrStaff]
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        return Comment.objects.all().order_by('-pub_date')
+        review_id = self.kwargs.get('review_id')
+        return Comment.objects.filter(review_id=review_id).order_by('-pub_date')
 
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')
         review = get_object_or_404(Review, pk=review_id)
         serializer.save(author=self.request.user, review=review)
 
-    def get_object(self):
-        review_id = self.kwargs.get('review_id')
-        queryset = self.filter_queryset(Comment.objects.filter(review_id=review_id))
-        obj = get_object_or_404(queryset, pk=self.kwargs["pk"])
-        self.check_object_permissions(self.request, obj)
-        return obj
-
-    
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
