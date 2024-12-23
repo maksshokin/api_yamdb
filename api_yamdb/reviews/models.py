@@ -1,124 +1,80 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 
-from reviews.validators import validate_username
+from reviews.validators import ValidateUsername
 
 
-ROLES = (
-    ('user', 'user'),
-    ('moderator', 'moderator'),
-    ('admin', 'admin'),
-)
+class User(AbstractUser, ValidateUsername):
+    ADMIN = 'admin'
+    MODERATOR = 'moderator'
+    USER = 'user'
 
-class User(AbstractUser):
-    username = models.CharField(
-        max_length=150,
-        unique=True,
-        blank=False,
-        null=False,
-        validators=(validate_username,)
+    ROLES = (
+        (ADMIN, 'Администратор'),
+        (MODERATOR, 'Модератор'),
+        (USER, 'Пользователь'),
     )
+
     email = models.EmailField(
         max_length=254,
-        unique=True,
-        blank=False,
-        null=False,
+        unique=True
+    )
+    username = models.CharField(
+        max_length=150,
+        unique=True
     )
     role = models.CharField(
-        max_length=20,
-        choices=ROLES,
-        default='user',
-        blank=True,
+        max_length=25,
+        choices=ROLES, default=USER
     )
     bio = models.TextField(
-        blank=True,
-    )
-    first_name = models.CharField(
-        max_length=150,
-        blank=True,
-    )
-    last_name = models.CharField(
-        max_length=150,
-        blank=True,
-    )
-    confirmation_code = models.CharField(
-        max_length=255,
         null=True,
-        blank=False,
+        blank=True
     )
 
     @property
     def is_moderator(self):
-        return self.role == 'moderator'
+        return self.role == self.MODERATOR
 
     @property
     def is_admin(self):
-        return self.role == 'admin'
+        return self.role == self.ADMIN or self.is_superuser or self.is_staff
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
 
     def __str__(self):
         return self.username
-    
-    class Meta:
-        ordering = ('id',)
 
-
-class BaseModel(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=256)
-    slug = models.SlugField(
-        max_length=50,
-        unique=True,
-        validators=[
-            RegexValidator(
-                regex=r'^[-a-zA-Z0-9_]+$',
-                message='Invalid slug format'
-            )
-        ]
-    )
-
-    class Meta:
-        abstract = True
+    slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
-
-
-class Category(BaseModel):
     
-    class Meta:
-        verbose_name = "Категория"
-        verbose_name_plural = "Категории"
-        ordering = ['name']
 
-
-class Genre(BaseModel):
-    
-    class Meta:
-        verbose_name = "Жанр"
-        verbose_name_plural = "Жанры"
-        ordering = ['name']
+class Genre(models.Model):
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(max_length=50, unique=True)
 
 
 class Title(models.Model):
     name = models.CharField(max_length=256)
-    year = models.PositiveIntegerField(
-        validators=[
-            MinValueValidator(0, message="Год не может быть отрицательным.")
-        ]
-    )
+    year = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
-    genre = models.ManyToManyField(Genre, related_name='titles')
+    genre = models.ManyToManyField(Genre)
     category = models.ForeignKey(
         Category,
         on_delete=models.SET_NULL,
         null=True,
         related_name='titles'
     )
-
-    class Meta:
-        verbose_name = "Произведение"
-        verbose_name_plural = "Произведения"
-        ordering = ['name']
 
     def __str__(self):
         return self.name
