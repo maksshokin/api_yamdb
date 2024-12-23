@@ -117,9 +117,9 @@ class GenreSerializer(serializers.ModelSerializer):
 
 
 class TitleSerializer(serializers.ModelSerializer):
-    genre = genre = serializers.SlugRelatedField(
+    genre = serializers.SlugRelatedField(
         slug_field='slug', queryset=Genre.objects.all(), many=True
-    ) 
+    )
     category = serializers.SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
     )
@@ -132,18 +132,18 @@ class TitleSerializer(serializers.ModelSerializer):
     def get_rating(self, obj):
         rating = obj.reviews.aggregate(Avg('score'))['score__avg']
         return rating if rating is not None else None
-    
+
     def to_representation(self, instance):
         self.fields['category'] = CategorySerializer()
         return super().to_representation(instance)
-    
+
     def create(self, validated_data):
         genres = validated_data.pop('genre')
         title = Title.objects.create(**validated_data)
         for genre in genres:
             title.genre.add(genre)
         return title
-    
+
     def validate_name(self, value):
         if len(value) > 256:
             raise serializers.ValidationError("Название произведения не может быть длиннее 256 символов.")

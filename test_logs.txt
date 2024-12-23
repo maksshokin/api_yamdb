@@ -66,24 +66,24 @@ tests/test_03_genre.py::Test03GenreAPI::test_03_category_fields_validation[data1
 tests/test_03_genre.py::Test03GenreAPI::test_03_category_fields_validation[data2-massage2] PASSED [ 73%]
 tests/test_03_genre.py::Test03GenreAPI::test_04_genres_delete PASSED     [ 75%]
 tests/test_03_genre.py::Test03GenreAPI::test_05_genres_check_permission PASSED [ 76%]
-tests/test_04_title.py::Test04TitleAPI::test_01_title_not_auth FAILED    [ 77%]
+tests/test_04_title.py::Test04TitleAPI::test_01_title_not_auth PASSED    [ 77%]
 tests/test_04_title.py::Test04TitleAPI::test_02_title_admin FAILED       [ 78%]
-tests/test_04_title.py::Test04TitleAPI::test_03_titles_detail FAILED     [ 80%]
-tests/test_04_title.py::Test04TitleAPI::test_04_titles_name_length_validation FAILED [ 81%]
-tests/test_04_title.py::Test04TitleAPI::test_05_titles_check_permission PASSED [ 82%]
-tests/test_04_title.py::Test04TitleAPI::test_06_titles_detail_put_not_allowed PASSED [ 83%]
+tests/test_04_title.py::Test04TitleAPI::test_03_titles_detail PASSED     [ 80%]
+tests/test_04_title.py::Test04TitleAPI::test_04_titles_name_length_validation PASSED [ 81%]
+tests/test_04_title.py::Test04TitleAPI::test_05_titles_check_permission FAILED [ 82%]
+tests/test_04_title.py::Test04TitleAPI::test_06_titles_detail_put_not_allowed FAILED [ 83%]
 tests/test_05_review.py::Test05ReviewAPI::test_01_review_not_auth PASSED [ 85%]
 tests/test_05_review.py::Test05ReviewAPI::test_02_review_post PASSED     [ 86%]
 tests/test_05_review.py::Test05ReviewAPI::test_03_review_detail_get PASSED [ 87%]
 tests/test_05_review.py::Test05ReviewAPI::test_04_review_detail_user PASSED [ 88%]
 tests/test_05_review.py::Test05ReviewAPI::test_05_reviews_detail_moderator_and_admin PASSED [ 90%]
 tests/test_05_review.py::Test05ReviewAPI::test_06_reviews_detail_put_not_allowed PASSED [ 91%]
-tests/test_06_comment.py::Test06CommentAPI::test_01_comment_not_auth FAILED [ 92%]
+tests/test_06_comment.py::Test06CommentAPI::test_01_comment_not_auth PASSED [ 92%]
 tests/test_06_comment.py::Test06CommentAPI::test_02_comment PASSED       [ 93%]
-tests/test_06_comment.py::Test06CommentAPI::test_03_comment_detail_get FAILED [ 95%]
-tests/test_06_comment.py::Test06CommentAPI::test_04_comment_detail__user_patch_delete FAILED [ 96%]
-tests/test_06_comment.py::Test06CommentAPI::test_05_comment_detail_admin_and_moderator FAILED [ 97%]
-tests/test_06_comment.py::Test06CommentAPI::test_06_comment_detail_not_auth FAILED [ 98%]
+tests/test_06_comment.py::Test06CommentAPI::test_03_comment_detail_get PASSED [ 95%]
+tests/test_06_comment.py::Test06CommentAPI::test_04_comment_detail__user_patch_delete PASSED [ 96%]
+tests/test_06_comment.py::Test06CommentAPI::test_05_comment_detail_admin_and_moderator PASSED [ 97%]
+tests/test_06_comment.py::Test06CommentAPI::test_06_comment_detail_not_auth PASSED [ 98%]
 tests/test_06_comment.py::Test06CommentAPI::test_07_comment_detail_put_not_allowed PASSED [100%]
 
 ================================== FAILURES ===================================
@@ -143,10 +143,10 @@ venv\lib\site-packages\django\db\models\query.py:435: DoesNotExist
 
 During handling of the above exception, another exception occurred:
 
-self = <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>
+self = <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>
 sql = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 params = ['', None, False, '', '', False, ...]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x0000022727B88250>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>})
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x0000027C8EB38220>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>})
 
     def _execute(self, sql, params, *ignored_wrapper_args):
         self.db.validate_no_broken_transaction()
@@ -160,7 +160,7 @@ ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.D
 venv\lib\site-packages\django\db\backends\utils.py:84: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x0000022728EF83A0>
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x0000027C8FEA6700>
 query = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 params = ['', None, False, '', '', False, ...]
 
@@ -175,8 +175,8 @@ venv\lib\site-packages\django\db\backends\sqlite3\base.py:423: IntegrityError
 
 The above exception was the direct cause of the following exception:
 
-self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000022728F10190>
-client = <django.test.client.Client object at 0x0000022728F0CF70>
+self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000027C8FEBE1F0>
+client = <django.test.client.Client object at 0x0000027C8FEBB520>
 
     def test_00_registration_same_email_restricted(self, client):
         valid_email_1 = 'test_duplicate_1@yamdb.fake'
@@ -227,7 +227,7 @@ client = <django.test.client.Client object at 0x0000022728F0CF70>
 tests\test_00_user_registration.py:331: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.test.client.Client object at 0x0000022728F0CF70>
+self = <django.test.client.Client object at 0x0000027C8FEBB520>
 path = '/api/v1/auth/signup/'
 data = {'email': 'test_duplicate_2@yamdb.fake', 'username': 'valid_username_1'}
 content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', follow = False
@@ -242,7 +242,7 @@ secure = False, extra = {}
 venv\lib\site-packages\django\test\client.py:751: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.test.client.Client object at 0x0000022728F0CF70>
+self = <django.test.client.Client object at 0x0000027C8FEBB520>
 path = '/api/v1/auth/signup/'
 data = {'email': 'test_duplicate_2@yamdb.fake', 'username': 'valid_username_1'}
 content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', secure = False
@@ -261,7 +261,7 @@ post_data = b'--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="email"\r
 venv\lib\site-packages\django\test\client.py:407: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.test.client.Client object at 0x0000022728F0CF70>, method = 'POST'
+self = <django.test.client.Client object at 0x0000027C8FEBB520>, method = 'POST'
 path = '/api/v1/auth/signup/'
 data = b'--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="email"\r\n\r\ntest_duplicate_2@yamdb.fake\r\n--BoUnDaRyStRiNg\r\nContent-Disposition: form-data; name="username"\r\n\r\nvalid_username_1\r\n--BoUnDaRyStRiNg--\r\n'
 content_type = 'multipart/form-data; boundary=BoUnDaRyStRiNg', secure = False
@@ -299,13 +299,13 @@ query_string = ''
 venv\lib\site-packages\django\test\client.py:473: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.test.client.Client object at 0x0000022728F0CF70>
+self = <django.test.client.Client object at 0x0000027C8FEBB520>
 request = {'CONTENT_LENGTH': '202', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'PATH_INFO': '/api/v1/auth/signup/', 'QUERY_STRING': '', ...}
 environ = {'CONTENT_LENGTH': '202', 'CONTENT_TYPE': 'multipart/form-data; boundary=BoUnDaRyStRiNg', 'HTTP_COOKIE': '', 'PATH_INFO': '/api/v1/auth/signup/', ...}
-data = {'context': [[{'True': True, 'False': False, 'None': None}, {'is_email': True, 'unicode_hint': '', 'frames': [{'exc_ca... query):'], 'pre_context_lineno': 416}}]], 'templates': [<django.template.base.Template object at 0x0000022728EA3220>]}
-on_template_render = functools.partial(<function store_rendered_templates at 0x0000022727DEFE50>, {'templates': [<django.template.base.Temp...rsor.executemany(self, query, param_list)', '', '    def convert_query(self, query):'], 'pre_context_lineno': 416}}]]})
-signal_uid = 'template-render-2367213747776'
-exception_uid = 'request-exception-2367213747776'
+data = {'context': [[{'True': True, 'False': False, 'None': None}, {'is_email': True, 'unicode_hint': '', 'frames': [{'exc_ca... query):'], 'pre_context_lineno': 416}}]], 'templates': [<django.template.base.Template object at 0x0000027C8FE522B0>]}
+on_template_render = functools.partial(<function store_rendered_templates at 0x0000027C8ED9EE50>, {'templates': [<django.template.base.Temp...rsor.executemany(self, query, param_list)', '', '    def convert_query(self, query):'], 'pre_context_lineno': 416}}]]})
+signal_uid = 'template-render-2734013795392'
+exception_uid = 'request-exception-2734013795392'
 response = <HttpResponseServerError status_code=500, "text/html">
 
     def request(self, **request):
@@ -337,7 +337,7 @@ response = <HttpResponseServerError status_code=500, "text/html">
 venv\lib\site-packages\django\test\client.py:719: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.test.client.Client object at 0x0000022728F0CF70>
+self = <django.test.client.Client object at 0x0000027C8FEBB520>
 response = <HttpResponseServerError status_code=500, "text/html">
 
     def check_exception(self, response):
@@ -366,7 +366,7 @@ request = <WSGIRequest: POST '/api/v1/auth/signup/'>
 venv\lib\site-packages\django\core\handlers\exception.py:47: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.test.client.ClientHandler object at 0x0000022728F0C2E0>
+self = <django.test.client.ClientHandler object at 0x0000027C8FEBB2B0>
 request = <WSGIRequest: POST '/api/v1/auth/signup/'>
 
     def _get_response(self, request):
@@ -404,7 +404,7 @@ venv\lib\site-packages\django\views\decorators\csrf.py:54:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 request = <WSGIRequest: POST '/api/v1/auth/signup/'>, args = (), kwargs = {}
-self = <api.views.WrappedAPIView object at 0x0000022728F03970>
+self = <api.views.WrappedAPIView object at 0x0000027C8FEB2280>
 
     def view(request, *args, **kwargs):
         self = cls(**initkwargs)
@@ -419,10 +419,10 @@ self = <api.views.WrappedAPIView object at 0x0000022728F03970>
 venv\lib\site-packages\django\views\generic\base.py:70: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <api.views.WrappedAPIView object at 0x0000022728F03970>
+self = <api.views.WrappedAPIView object at 0x0000027C8FEB2280>
 request = <rest_framework.request.Request: POST '/api/v1/auth/signup/'>
 args = (), kwargs = {}
-handler = <bound method api_view.<locals>.decorator.<locals>.handler of <api.views.WrappedAPIView object at 0x0000022728F03970>>
+handler = <bound method api_view.<locals>.decorator.<locals>.handler of <api.views.WrappedAPIView object at 0x0000027C8FEB2280>>
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -453,7 +453,7 @@ handler = <bound method api_view.<locals>.decorator.<locals>.handler of <api.vie
 venv\lib\site-packages\rest_framework\views.py:509: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <api.views.WrappedAPIView object at 0x0000022728F03970>
+self = <api.views.WrappedAPIView object at 0x0000027C8FEB2280>
 exc = IntegrityError('UNIQUE constraint failed: reviews_user.username')
 
     def handle_exception(self, exc):
@@ -482,7 +482,7 @@ exc = IntegrityError('UNIQUE constraint failed: reviews_user.username')
 venv\lib\site-packages\rest_framework\views.py:469: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <api.views.WrappedAPIView object at 0x0000022728F03970>
+self = <api.views.WrappedAPIView object at 0x0000027C8FEB2280>
 exc = IntegrityError('UNIQUE constraint failed: reviews_user.username')
 
     def raise_uncaught_exception(self, exc):
@@ -496,10 +496,10 @@ exc = IntegrityError('UNIQUE constraint failed: reviews_user.username')
 venv\lib\site-packages\rest_framework\views.py:480: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <api.views.WrappedAPIView object at 0x0000022728F03970>
+self = <api.views.WrappedAPIView object at 0x0000027C8FEB2280>
 request = <rest_framework.request.Request: POST '/api/v1/auth/signup/'>
 args = (), kwargs = {}
-handler = <bound method api_view.<locals>.decorator.<locals>.handler of <api.views.WrappedAPIView object at 0x0000022728F03970>>
+handler = <bound method api_view.<locals>.decorator.<locals>.handler of <api.views.WrappedAPIView object at 0x0000027C8FEB2280>>
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -527,7 +527,7 @@ handler = <bound method api_view.<locals>.decorator.<locals>.handler of <api.vie
 venv\lib\site-packages\rest_framework\views.py:506: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <api.views.WrappedAPIView object at 0x0000022728F03970>
+self = <api.views.WrappedAPIView object at 0x0000027C8FEB2280>
 args = (<rest_framework.request.Request: POST '/api/v1/auth/signup/'>,)
 kwargs = {}
 
@@ -545,17 +545,30 @@ request = <rest_framework.request.Request: POST '/api/v1/auth/signup/'>
         if serializer.is_valid():
             email = serializer.validated_data['email']
             username = serializer.validated_data['username']
+    
             if User.objects.filter(email=email).exists():
                 return Response(
                     {"email": "Пользователь с таким email уже существует."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
+    
+            if User.objects.filter(email=email).exists():
+                user = User.objects.get(email=email)
+                confirmation_code = default_token_generator.make_token(user)
+                send_mail(
+                    subject='Код подтверждения',
+                    message=f'{confirmation_code}',
+                    from_email='admin@yamdb.local',
+                    recipient_list=[email],
+                )
+                return Response(serializer.data, status=status.HTTP_200_OK)
+    
 >           user, created = User.objects.get_or_create(username=username, email=email)
 
-api_yamdb\api\views.py:50: 
+api_yamdb\api\views.py:63: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.contrib.auth.models.UserManager object at 0x000002272869B6D0>
+self = <django.contrib.auth.models.UserManager object at 0x0000027C8F64B6A0>
 args = ()
 kwargs = {'email': 'test_duplicate_2@yamdb.fake', 'username': 'valid_username_1'}
 
@@ -792,7 +805,7 @@ venv\lib\site-packages\django\db\models\base.py:868:
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = <User: valid_username_1>
-manager = <django.db.models.manager.Manager object at 0x0000022728D273A0>
+manager = <django.db.models.manager.Manager object at 0x0000027C8FCD7D00>
 using = 'default'
 fields = [<django.db.models.fields.CharField: password>, <django.db.models.fields.DateTimeField: last_login>, <django.db.models...ld: first_name>, <django.db.models.fields.CharField: last_name>, <django.db.models.fields.BooleanField: is_staff>, ...]
 returning_fields = [<django.db.models.fields.BigAutoField: id>], raw = False
@@ -810,7 +823,7 @@ returning_fields = [<django.db.models.fields.BigAutoField: id>], raw = False
 venv\lib\site-packages\django\db\models\base.py:906: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.models.manager.Manager object at 0x0000022728D273A0>
+self = <django.db.models.manager.Manager object at 0x0000027C8FCD7D00>
 args = ([<User: valid_username_1>],)
 kwargs = {'fields': [<django.db.models.fields.CharField: password>, <django.db.models.fields.DateTimeField: last_login>, <djang...d: is_staff>, ...], 'raw': False, 'returning_fields': [<django.db.models.fields.BigAutoField: id>], 'using': 'default'}
 
@@ -840,7 +853,7 @@ using = 'default', ignore_conflicts = False
 venv\lib\site-packages\django\db\models\query.py:1270: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.models.sql.compiler.SQLInsertCompiler object at 0x0000022728F188E0>
+self = <django.db.models.sql.compiler.SQLInsertCompiler object at 0x0000027C8FEC5BE0>
 returning_fields = [<django.db.models.fields.BigAutoField: id>]
 
     def execute_sql(self, returning_fields=None):
@@ -856,7 +869,7 @@ returning_fields = [<django.db.models.fields.BigAutoField: id>]
 venv\lib\site-packages\django\db\models\sql\compiler.py:1410: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>
+self = <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>
 sql = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 params = ['', None, False, '', '', False, ...]
 
@@ -866,10 +879,10 @@ params = ['', None, False, '', '', False, ...]
 venv\lib\site-packages\django\db\backends\utils.py:66: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>
+self = <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>
 sql = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 params = ['', None, False, '', '', False, ...], many = False
-executor = <bound method CursorWrapper._execute of <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>>
+executor = <bound method CursorWrapper._execute of <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>>
 
     def _execute_with_wrappers(self, sql, params, many, executor):
         context = {'connection': self.db, 'cursor': self}
@@ -880,10 +893,10 @@ executor = <bound method CursorWrapper._execute of <django.db.backends.utils.Cur
 venv\lib\site-packages\django\db\backends\utils.py:75: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>
+self = <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>
 sql = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 params = ['', None, False, '', '', False, ...]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x0000022727B88250>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>})
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x0000027C8EB38220>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>})
 
     def _execute(self, sql, params, *ignored_wrapper_args):
         self.db.validate_no_broken_transaction()
@@ -897,10 +910,10 @@ ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.D
 venv\lib\site-packages\django\db\backends\utils.py:84: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.utils.DatabaseErrorWrapper object at 0x0000022728BC1AC0>
+self = <django.db.utils.DatabaseErrorWrapper object at 0x0000027C8FB73BE0>
 exc_type = <class 'sqlite3.IntegrityError'>
 exc_value = IntegrityError('UNIQUE constraint failed: reviews_user.username')
-traceback = <traceback object at 0x0000022728EF1A00>
+traceback = <traceback object at 0x0000027C8FE9FF40>
 
     def __exit__(self, exc_type, exc_value, traceback):
         if exc_type is None:
@@ -928,10 +941,10 @@ traceback = <traceback object at 0x0000022728EF1A00>
 venv\lib\site-packages\django\db\utils.py:90: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>
+self = <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>
 sql = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
 params = ['', None, False, '', '', False, ...]
-ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x0000022727B88250>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x0000022728F18070>})
+ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.DatabaseWrapper object at 0x0000027C8EB38220>, 'cursor': <django.db.backends.utils.CursorWrapper object at 0x0000027C8FEC5A00>})
 
     def _execute(self, sql, params, *ignored_wrapper_args):
         self.db.validate_no_broken_transaction()
@@ -945,7 +958,7 @@ ignored_wrapper_args = (False, {'connection': <django.db.backends.sqlite3.base.D
 venv\lib\site-packages\django\db\backends\utils.py:84: 
 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x0000022728EF83A0>
+self = <django.db.backends.sqlite3.base.SQLiteCursorWrapper object at 0x0000027C8FEA6700>
 query = 'INSERT INTO "reviews_user" ("password", "last_login", "is_superuser", "first_name", "last_name", "is_staff", "is_active", "date_joined", "email", "username", "role", "bio") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
 params = ['', None, False, '', '', False, ...]
 
@@ -960,8 +973,8 @@ venv\lib\site-packages\django\db\backends\sqlite3\base.py:423: IntegrityError
 
 During handling of the above exception, another exception occurred:
 
-self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000022728F10190>
-client = <django.test.client.Client object at 0x0000022728F0CF70>
+self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000027C8FEBE1F0>
+client = <django.test.client.Client object at 0x0000027C8FEBB520>
 
     def test_00_registration_same_email_restricted(self, client):
         valid_email_1 = 'test_duplicate_1@yamdb.fake'
@@ -1053,7 +1066,7 @@ Traceback (most recent call last):
     response = handler(request, *args, **kwargs)
   File "D:\Dev\api_yamdb\venv\lib\site-packages\rest_framework\decorators.py", line 50, in handler
     return func(*args, **kwargs)
-  File "D:\Dev\api_yamdb\api_yamdb\api\views.py", line 50, in singup
+  File "D:\Dev\api_yamdb\api_yamdb\api\views.py", line 63, in singup
     user, created = User.objects.get_or_create(username=username, email=email)
   File "D:\Dev\api_yamdb\venv\lib\site-packages\django\db\models\manager.py", line 85, in manager_method
     return getattr(self.get_queryset(), name)(*args, **kwargs)
@@ -1092,8 +1105,8 @@ Traceback (most recent call last):
 django.db.utils.IntegrityError: UNIQUE constraint failed: reviews_user.username
 ___ Test00UserRegistration.test_get_new_confirmation_code_for_existing_user ___
 
-self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000022728DBBF40>
-client = <django.test.client.Client object at 0x0000022728D4D490>
+self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000027C8FCF44F0>
+client = <django.test.client.Client object at 0x0000027C8FCF44C0>
 
     def test_get_new_confirmation_code_for_existing_user(self, client):
         valid_data = {
@@ -1123,9 +1136,9 @@ tests\test_00_user_registration.py:351: AssertionError
 WARNING  django.request:log.py:224 Bad Request: /api/v1/auth/signup/
 _ Test00UserRegistration.test_get_confirmation_code_for_user_created_by_admin _
 
-self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000022728D36F10>
-admin_client = <rest_framework.test.APIClient object at 0x0000022729319A00>
-client = <django.test.client.Client object at 0x00000227293197F0>
+self = <tests.test_00_user_registration.Test00UserRegistration object at 0x0000027C8FCF4A60>
+admin_client = <rest_framework.test.APIClient object at 0x0000027C902C8BE0>
+client = <django.test.client.Client object at 0x0000027C902C8790>
 django_user_model = <class 'reviews.models.User'>
 
     def test_get_confirmation_code_for_user_created_by_admin(
@@ -1157,34 +1170,11 @@ E         -<HTTPStatus.OK: 200>
 tests\test_00_user_registration.py:373: AssertionError
 ------------------------------ Captured log call ------------------------------
 WARNING  django.request:log.py:224 Bad Request: /api/v1/auth/signup/
-____________________ Test04TitleAPI.test_01_title_not_auth ____________________
-
-self = <tests.test_04_title.Test04TitleAPI object at 0x00000227293E8160>
-client = <django.test.client.Client object at 0x000002272A98D610>
-
-    def test_01_title_not_auth(self, client):
-        response = client.get(self.TITLES_URL)
-        assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт `{self.TITLES_URL}` не найден.Проверьте настройки в '
-            '*urls.py*.'
-        )
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что GET-запрос неавторизованного пользователя к '
-            f'`{self.TITLES_URL}` возвращает ответ со статусом 200.'
-        )
-E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/` возвращает ответ со статусом 200.
-E       assert 401 == <HTTPStatus.OK: 200>
-E         +401
-E         -<HTTPStatus.OK: 200>
-
-tests\test_04_title.py:23: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/
 _____________________ Test04TitleAPI.test_02_title_admin ______________________
 
-self = <tests.test_04_title.Test04TitleAPI object at 0x00000227293E86A0>
-admin_client = <rest_framework.test.APIClient object at 0x000002272944D340>
-client = <django.test.client.Client object at 0x000002272944D130>
+self = <tests.test_04_title.Test04TitleAPI object at 0x0000027C8FEBB1C0>
+admin_client = <rest_framework.test.APIClient object at 0x0000027C90397490>
+client = <django.test.client.Client object at 0x0000027C8FE52D90>
 
     def test_02_title_admin(self, admin_client, client):
         genres = create_genre(admin_client)
@@ -1247,338 +1237,132 @@ client = <django.test.client.Client object at 0x000002272944D130>
         )
     
         response = client.get(self.TITLES_URL)
->       assert response.status_code == HTTPStatus.OK, (
+        assert response.status_code == HTTPStatus.OK, (
             'Проверьте, что GET-запрос неавторизованного пользователя к '
             f'`{self.TITLES_URL}` возвращает ответ со статусом 200.'
         )
-E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/` возвращает ответ со статусом 200.
-E       assert 401 == <HTTPStatus.OK: 200>
-E         +401
-E         -<HTTPStatus.OK: 200>
+        data = response.json()
+        check_pagination(self.TITLES_URL, data, title_count)
+    
+        expected_title_names = {post_data_1['name'], post_data_2['name']}
+        title_names = {element.get('name') for element in data['results']}
+        assert len(expected_title_names.intersection(title_names)) == 2, (
+            f'Проверьте, что для эндпоинта `{self.TITLES_URL}` настроена '
+            'пагинация. Сейчас значение параметра `results` отсутствует или '
+            'содержит некорректную информацию о существующих объектах.'
+        )
+    
+        for element in data['results']:
+            if element['name'] == post_data_1['name']:
+                title = element
+    
+        assert title.get('rating') is None, (
+            'Проверьте, что при GET-запросе неавторизованного '
+            f'пользователя к `{self.TITLES_URL}` возвращается информация о '
+            'рейтинге произведений. Если отзывов о произведении нет - '
+            'значением поля `rating` должено быть `None`.'
+        )
+        assert title.get('category') == categories[0], (
+            'Проверьте, что при GET-запросе неавторизованного пользователя к '
+            f'`{self.TITLES_URL}` в ответе содержится информация о категориях '
+            'произведений. Сейчас поле `category` для элементов списка '
+            '`results` отсутствует или содержит некорректное значение.'
+        )
+    
+        title_genres = title.get('genre', [])
+>       assert genres[0] in title_genres and genres[1] in title_genres, (
+            'Проверьте, что при GET-запросе неавторизованного пользователя к '
+            f'`{self.TITLES_URL}` в ответе содержится список жанров для '
+            'каждого произведения. Сейчас поле `genres` для элементов списка '
+            '`results` отсутствует или содержит некорректное значение.'
+        )
+E       AssertionError: Проверьте, что при GET-запросе неавторизованного пользователя к `/api/v1/titles/` в ответе содержится список жанров для каждого произведения. Сейчас поле `genres` для элементов списка `results` отсутствует или содержит некорректное значение.
+E       assert ({'name': 'Ужасы', 'slug': 'horror'} in ['horror', 'comedy'])
 
-tests\test_04_title.py:89: AssertionError
+tests\test_04_title.py:122: AssertionError
 ------------------------------ Captured log call ------------------------------
 WARNING  django.request:log.py:224 Bad Request: /api/v1/titles/
 WARNING  django.request:log.py:224 Bad Request: /api/v1/titles/
+_______________ Test04TitleAPI.test_05_titles_check_permission ________________
+
+self = <tests.test_04_title.Test04TitleAPI object at 0x0000027C917E9FD0>
+client = <django.test.client.Client object at 0x0000027C901B9100>
+user_client = <rest_framework.test.APIClient object at 0x0000027C8FEBE940>
+moderator_client = <rest_framework.test.APIClient object at 0x0000027C8FEBE6D0>
+admin_client = <rest_framework.test.APIClient object at 0x0000027C8FEBE2E0>
+
+    def test_05_titles_check_permission(self, client, user_client,
+                                        moderator_client, admin_client):
+        titles, categories, genres = create_titles(admin_client)
+        data = {
+            'name': 'Зловещие мертвецы',
+            'year': 1981,
+            'genre': [genres[2]['slug'], genres[1]['slug']],
+            'category': categories[0]['slug'],
+            'description': 'This Is My Boomstick! - Ash'
+        }
+        check_permissions(client, self.TITLES_URL, data,
+                          'неавторизованного пользователя', titles,
+                          HTTPStatus.UNAUTHORIZED)
+>       check_permissions(user_client, self.TITLES_URL, data,
+                          'пользователя с ролью `user`', titles,
+                          HTTPStatus.FORBIDDEN)
+
+tests\test_04_title.py:338: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+client = <rest_framework.test.APIClient object at 0x0000027C8FEBE940>
+url = '/api/v1/titles/'
+data = {'category': 'films', 'description': 'This Is My Boomstick! - Ash', 'genre': ['drama', 'comedy'], 'name': 'Зловещие мертвецы', ...}
+user_role = 'пользователя с ролью `user`'
+objects = [{'category': 'films', 'description': 'I`ll be back', 'genre': ['horror', 'comedy'], 'id': 6, ...}, {'category': 'books', 'description': 'Yippie ki yay...', 'genre': ['drama'], 'id': 7, ...}]
+expected_status = <HTTPStatus.FORBIDDEN: 403>
+
+    def check_permissions(client, url, data, user_role, objects,
+                          expected_status):
+        sufix = 'slug' if 'slug' in objects[0] else 'id'
+    
+        response = client.post(url, data=data)
+>       assert response.status_code == expected_status, (
+            f'Проверьте, что POST-запрос {user_role} к `{url}` возвращает ответ '
+            f'со статусом {expected_status}.'
+        )
+E       AssertionError: Проверьте, что POST-запрос пользователя с ролью `user` к `/api/v1/titles/` возвращает ответ со статусом 403.
+
+tests\utils.py:137: AssertionError
+------------------------------ Captured log call ------------------------------
 WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/
-____________________ Test04TitleAPI.test_03_titles_detail _____________________
+WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/6/
+WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/6/
+____________ Test04TitleAPI.test_06_titles_detail_put_not_allowed _____________
 
-self = <tests.test_04_title.Test04TitleAPI object at 0x000002272944D070>
-client = <django.test.client.Client object at 0x000002272A9802B0>
-admin_client = <rest_framework.test.APIClient object at 0x000002272A9806A0>
-
-    def test_03_titles_detail(self, client, admin_client):
-        titles, categories, _ = create_titles(admin_client)
-        response = client.get(
-            self.TITLES_DETAIL_URL_TEMPLATE.format(title_id=titles[0]['id'])
-        )
-        assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт `{self.TITLES_DETAIL_URL_TEMPLATE}` не найден, '
-            'проверьте настройки в *urls.py*.'
-        )
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что GET-запрос неавторизованного пользователя к '
-            f'`{self.TITLES_DETAIL_URL_TEMPLATE}` возвращает ответ со '
-            'статусом 200.'
-        )
-E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/{title_id}/` возвращает ответ со статусом 200.
-E       assert 401 == <HTTPStatus.OK: 200>
-E         +401
-E         -<HTTPStatus.OK: 200>
-
-tests\test_04_title.py:205: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/3/
-____________ Test04TitleAPI.test_04_titles_name_length_validation _____________
-
-self = <tests.test_04_title.Test04TitleAPI object at 0x000002272931AFD0>
-admin_client = <rest_framework.test.APIClient object at 0x000002272923FCD0>
-
-    def test_04_titles_name_length_validation(self, admin_client):
-        genres = create_genre(admin_client)
-        categories = create_categories(admin_client)
-    
-        data = {
-            'name': 'It`s Over 9000!' + '!' * 242,
-            'year': 1989,
-            'genre': [genres[0]['slug'], genres[1]['slug']],
-            'category': categories[0]['slug'],
-            'description': 'Dragon Ball Z'
-        }
-        response = admin_client.post(self.TITLES_URL, data=data)
-        assert response.status_code == HTTPStatus.BAD_REQUEST, (
-            'Убедитесь, что при обработке POST-запроса администратора к '
-            f'`{self.TITLES_URL}` проверяется длина поля `name`: название '
-            'произведения не может быть длиннее 256 символов.'
-        )
-    
-        data = {
-            'name': 'Мост через реку Квай',
-            'year': 1957,
-            'genre': [genres[0]['slug'], genres[1]['slug']],
-            'category': categories[0]['slug'],
-            'description': 'Рон Свонсон рекомендует.'
-        }
-        response = admin_client.post(self.TITLES_URL, data=data)
-        assert response.status_code == HTTPStatus.CREATED, (
-            f'Если POST-запрос администратора к `{self.TITLES_URL}` '
-            'содержит корректные данные - должен вернуться ответ со статусом '
-            '201.'
-        )
-        idx = response.json().get('id')
-        assert idx, (
-            'Проверьте, что ответ на успешный POST-запрос к '
-            f'`{self.TITLES_URL}` содержит `id` созданного произведения.'
-        )
-    
-        response = admin_client.patch(
-            self.TITLES_DETAIL_URL_TEMPLATE.format(title_id=idx),
-            data={'name': ('longname' + 'e' * 249)}
-        )
->       assert response.status_code == HTTPStatus.BAD_REQUEST, (
-            'Проверьте, что при обработке PATCH-запрос администратора к '
-            f'`{self.TITLES_DETAIL_URL_TEMPLATE}` проверяется длина поля '
-            '`name`: название произведения не может быть длиннее 256 символов.'
-        )
-E       AssertionError: Проверьте, что при обработке PATCH-запрос администратора к `/api/v1/titles/{title_id}/` проверяется длина поля `name`: название произведения не может быть длиннее 256 символов.
-E       assert 405 == <HTTPStatus.BAD_REQUEST: 400>
-E         +405
-E         -<HTTPStatus.BAD_REQUEST: 400>
-
-tests\test_04_title.py:319: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Bad Request: /api/v1/titles/
-WARNING  django.request:log.py:224 Method Not Allowed: /api/v1/titles/5/
-__________________ Test06CommentAPI.test_01_comment_not_auth __________________
-
-self = <tests.test_06_comment.Test06CommentAPI object at 0x0000022729405910>
-client = <django.test.client.Client object at 0x000002272A65E340>
-admin_client = <rest_framework.test.APIClient object at 0x00000227291EB280>
-admin = <User: TestAdmin>
-user_client = <rest_framework.test.APIClient object at 0x00000227291A5880>
+self = <tests.test_04_title.Test04TitleAPI object at 0x0000027C8FEBE580>
+admin_client = <rest_framework.test.APIClient object at 0x0000027C903D4250>
 user = <User: TestUser>
-moderator_client = <rest_framework.test.APIClient object at 0x000002272946F6A0>
-moderator = <User: TestModerator>
 
-    def test_01_comment_not_auth(self, client, admin_client, admin,
-                                 user_client, user, moderator_client,
-                                 moderator):
-        author_map = {
-            admin: admin_client,
-            user: user_client,
-            moderator: moderator_client
-        }
-        reviews, titles = create_reviews(admin_client, author_map)
-    
-        response = client.get(
-            self.COMMENTS_URL_TEMPLATE.format(
-                title_id=titles[0]['id'],
-                review_id=reviews[0]['id']
-            )
+    def test_06_titles_detail_put_not_allowed(self, admin_client, user):
+        titles, _, _ = create_titles(admin_client)
+        title = titles[0]
+        title['name'] = 'Новое название произведения.'
+        response = admin_client.put(
+            self.TITLES_DETAIL_URL_TEMPLATE.format(title_id=title['id']),
+            data=title
         )
-        assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт `{self.COMMENTS_URL_TEMPLATE}` не найден. Проверьте '
-            'настрокий в *urls.py*.'
+>       assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED, (
+            f'Проверьте, что PUT-запрос к `{self.TITLES_DETAIL_URL_TEMPLATE} '
+            'не предусмотрен и возвращает статус 405.'
         )
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что GET-запрос неавторизованного пользователя к '
-            f'`{self.COMMENTS_URL_TEMPLATE}` возвращает ответ со статусом 200.'
-        )
-E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/{title_id}/reviews/{review_id}/comments/` возвращает ответ со статусом 200.
-E       assert 401 == <HTTPStatus.OK: 200>
-E         +401
-E         -<HTTPStatus.OK: 200>
+E       AssertionError: Проверьте, что PUT-запрос к `/api/v1/titles/{title_id}/ не предусмотрен и возвращает статус 405.
+E       assert 200 == <HTTPStatus.METHOD_NOT_ALLOWED: 405>
+E         +200
+E         -<HTTPStatus.METHOD_NOT_ALLOWED: 405>
 
-tests\test_06_comment.py:38: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/22/reviews/19/comments/
-_________________ Test06CommentAPI.test_03_comment_detail_get _________________
-
-self = <tests.test_06_comment.Test06CommentAPI object at 0x000002272A6D67F0>
-client = <django.test.client.Client object at 0x0000022728EF4E20>
-admin_client = <rest_framework.test.APIClient object at 0x000002272A6E85E0>
-admin = <User: TestAdmin>
-user_client = <rest_framework.test.APIClient object at 0x000002272A6E8310>
-user = <User: TestUser>
-moderator_client = <rest_framework.test.APIClient object at 0x00000227294D8100>
-moderator = <User: TestModerator>
-
-    def test_03_comment_detail_get(self, client, admin_client, admin,
-                                   user_client, user, moderator_client,
-                                   moderator):
-        author_map = {
-            admin: admin_client,
-            user: user_client,
-            moderator: moderator_client
-        }
-        comments, reviews, titles = create_comments(admin_client, author_map)
-    
-        response = client.get(
-            self.COMMENT_DETAIL_URL_TEMPLATE.format(
-                title_id=titles[0]['id'],
-                review_id=reviews[0]['id'],
-                comment_id=comments[0]['id']
-            )
-        )
-        assert response.status_code != HTTPStatus.NOT_FOUND, (
-            f'Эндпоинт `{self.COMMENT_DETAIL_URL_TEMPLATE}` не найден. '
-            'Проверьте настройки в *urls.py*.'
-        )
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что GET-запрос неавторизованного пользователя к '
-            f'`{self.COMMENT_DETAIL_URL_TEMPLATE}` возвращает ответ со '
-            'статусом 200.'
-        )
-E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/` возвращает ответ со статусом 200.
-E       assert 401 == <HTTPStatus.OK: 200>
-E         +401
-E         -<HTTPStatus.OK: 200>
-
-tests\test_06_comment.py:151: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/26/reviews/25/comments/4/
-_________ Test06CommentAPI.test_04_comment_detail__user_patch_delete __________
-
-self = <tests.test_06_comment.Test06CommentAPI object at 0x000002272A81C4C0>
-admin_client = <rest_framework.test.APIClient object at 0x000002272A628A60>
-admin = <User: TestAdmin>
-user_client = <rest_framework.test.APIClient object at 0x000002272A628400>
-user = <User: TestUser>
-moderator_client = <rest_framework.test.APIClient object at 0x000002272A628610>
-moderator = <User: TestModerator>
-
-    def test_04_comment_detail__user_patch_delete(self, admin_client, admin,
-                                                  user_client, user,
-                                                  moderator_client,
-                                                  moderator):
-        author_map = {
-            admin: admin_client,
-            user: user_client,
-            moderator: moderator_client
-        }
-        comments, reviews, titles = create_comments(admin_client, author_map)
-    
-        second_comment_url = self.COMMENT_DETAIL_URL_TEMPLATE.format(
-            title_id=titles[0]['id'],
-            review_id=reviews[0]['id'],
-            comment_id=comments[1]['id']
-        )
-        new_data = {'text': 'Updated'}
-        response = user_client.patch(second_comment_url, data=new_data)
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что PATCH-запрос авторизованного пользователя к '
-            'его собственному комментарию через '
-            f'`{self.COMMENT_DETAIL_URL_TEMPLATE}` возвращает ответ со '
-            'статусом 200.'
-        )
-E       AssertionError: Проверьте, что PATCH-запрос авторизованного пользователя к его собственному комментарию через `/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/` возвращает ответ со статусом 200.
-E       assert 405 == <HTTPStatus.OK: 200>
-E         +405
-E         -<HTTPStatus.OK: 200>
-
-tests\test_06_comment.py:184: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Method Not Allowed: /api/v1/titles/28/reviews/28/comments/8/
-_________ Test06CommentAPI.test_05_comment_detail_admin_and_moderator _________
-
-self = <tests.test_06_comment.Test06CommentAPI object at 0x000002272A628F10>
-admin_client = <rest_framework.test.APIClient object at 0x000002272A81C220>
-admin = <User: TestAdmin>
-user_client = <rest_framework.test.APIClient object at 0x00000227293AF340>
-user = <User: TestUser>
-moderator_client = <rest_framework.test.APIClient object at 0x0000022729348B20>
-moderator = <User: TestModerator>
-
-    def test_05_comment_detail_admin_and_moderator(self, admin_client, admin,
-                                                   user_client, user,
-                                                   moderator_client,
-                                                   moderator):
-        author_map = {
-            admin: admin_client,
-            user: user_client,
-            moderator: moderator_client
-        }
-        comments, reviews, titles = create_comments(admin_client, author_map)
-    
-        new_data = {'text': 'rewq'}
-        response = admin_client.patch(
-            self.COMMENT_DETAIL_URL_TEMPLATE.format(
-                title_id=titles[0]['id'],
-                review_id=reviews[0]['id'],
-                comment_id=comments[1]['id']
-            ),
-            data=new_data
-        )
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что PATCH-запрос авторизованного пользователя к '
-            'его собственному комментарию через '
-            f'`{self.COMMENT_DETAIL_URL_TEMPLATE}` возвращает ответ со '
-            'статусом 200.'
-        )
-E       AssertionError: Проверьте, что PATCH-запрос авторизованного пользователя к его собственному комментарию через `/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/` возвращает ответ со статусом 200.
-E       assert 405 == <HTTPStatus.OK: 200>
-E         +405
-E         -<HTTPStatus.OK: 200>
-
-tests\test_06_comment.py:265: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Method Not Allowed: /api/v1/titles/30/reviews/31/comments/11/
-______________ Test06CommentAPI.test_06_comment_detail_not_auth _______________
-
-self = <tests.test_06_comment.Test06CommentAPI object at 0x000002272A81C2E0>
-admin_client = <rest_framework.test.APIClient object at 0x000002272A7F3190>
-admin = <User: TestAdmin>
-client = <django.test.client.Client object at 0x000002272A7F3400>
-user_client = <rest_framework.test.APIClient object at 0x000002272A7F3BB0>
-user = <User: TestUser>
-moderator_client = <rest_framework.test.APIClient object at 0x000002272A7F38E0>
-moderator = <User: TestModerator>
-
-    def test_06_comment_detail_not_auth(self, admin_client, admin, client,
-                                        user_client, user, moderator_client,
-                                        moderator):
-        author_map = {
-            admin: admin_client,
-            user: user_client,
-            moderator: moderator_client
-        }
-        comments, reviews, titles = create_comments(admin_client, author_map)
-        self.COMMENT_DETAIL_URL_TEMPLATE = (
-            '/api/v1/titles/{title_id}/reviews/'
-            '{review_id}/comments/{comment_id}/'
-        )
-        url = self.COMMENT_DETAIL_URL_TEMPLATE.format(
-            title_id=titles[0]['id'],
-            review_id=reviews[0]['id'],
-            comment_id=comments[1]['id']
-        )
-        new_data = {'text': 'update'}
-    
-        response = client.get(url)
->       assert response.status_code == HTTPStatus.OK, (
-            'Проверьте, что GET-запрос неавторизованного пользователя к '
-            f'`{self.COMMENT_DETAIL_URL_TEMPLATE}` возвращает ответ со '
-            'статусом 200.'
-        )
-E       AssertionError: Проверьте, что GET-запрос неавторизованного пользователя к `/api/v1/titles/{title_id}/reviews/{review_id}/comments/{comment_id}/` возвращает ответ со статусом 200.
-E       assert 401 == <HTTPStatus.OK: 200>
-E         +401
-E         -<HTTPStatus.OK: 200>
-
-tests\test_06_comment.py:321: AssertionError
------------------------------- Captured log call ------------------------------
-WARNING  django.request:log.py:224 Unauthorized: /api/v1/titles/32/reviews/34/comments/14/
+tests\test_04_title.py:352: AssertionError
 =========================== short test summary info ===========================
 FAILED tests/test_00_user_registration.py::Test00UserRegistration::test_00_registration_same_email_restricted
 FAILED tests/test_00_user_registration.py::Test00UserRegistration::test_get_new_confirmation_code_for_existing_user
 FAILED tests/test_00_user_registration.py::Test00UserRegistration::test_get_confirmation_code_for_user_created_by_admin
-FAILED tests/test_04_title.py::Test04TitleAPI::test_01_title_not_auth - Asser...
 FAILED tests/test_04_title.py::Test04TitleAPI::test_02_title_admin - Assertio...
-FAILED tests/test_04_title.py::Test04TitleAPI::test_03_titles_detail - Assert...
-FAILED tests/test_04_title.py::Test04TitleAPI::test_04_titles_name_length_validation
-FAILED tests/test_06_comment.py::Test06CommentAPI::test_01_comment_not_auth
-FAILED tests/test_06_comment.py::Test06CommentAPI::test_03_comment_detail_get
-FAILED tests/test_06_comment.py::Test06CommentAPI::test_04_comment_detail__user_patch_delete
-FAILED tests/test_06_comment.py::Test06CommentAPI::test_05_comment_detail_admin_and_moderator
-FAILED tests/test_06_comment.py::Test06CommentAPI::test_06_comment_detail_not_auth
-======================= 12 failed, 68 passed in 13.94s ========================
+FAILED tests/test_04_title.py::Test04TitleAPI::test_05_titles_check_permission
+FAILED tests/test_04_title.py::Test04TitleAPI::test_06_titles_detail_put_not_allowed
+======================== 6 failed, 74 passed in 14.31s ========================

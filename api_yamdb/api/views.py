@@ -42,19 +42,32 @@ def singup(request):
     if serializer.is_valid():
         email = serializer.validated_data['email']
         username = serializer.validated_data['username']
+
         if User.objects.filter(email=email).exists():
             return Response(
                 {"email": "Пользователь с таким email уже существует."},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+            confirmation_code = default_token_generator.make_token(user)
+            send_mail(
+                subject='Код подтверждения',
+                message=f'{confirmation_code}',
+                from_email='admin@yamdb.local',
+                recipient_list=[email],
+            )
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
         user, created = User.objects.get_or_create(username=username, email=email)
         if created:
             confirmation_code = default_token_generator.make_token(user)
             send_mail(
                 subject='Код подтверждения',
-                from_email='',
                 message=f'{confirmation_code}',
-                recipient_list=[user.email]
+                from_email='admin@yamdb.local',
+                recipient_list=[email],
             )
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -203,37 +216,25 @@ class GenreViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().order_by('name')
     serializer_class = TitleSerializer
-    permission_classes = [permissions.IsAuthenticated, IsSuperUserOrAdmin]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
     def update(self, request, *args, **kwargs):
-        return Response(
-            {'detail': 'Метод не разрешен.'},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return super().update(request, *args, **kwargs)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrStaff, permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrStaff]
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
-        return Comment.objects.all().order_by('-pub_date')
+        review_id = self.kwargs.get('review_id')
+        return Comment.objects.filter(review_id=review_id).order_by('-pub_date')
 
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')
         review = get_object_or_404(Review, pk=review_id)
         serializer.save(author=self.request.user, review=review)
 
-    def get_object(self):
-        review_id = self.kwargs.get('review_id')
-        queryset = self.filter_queryset(Comment.objects.filter(review_id=review_id))
-        obj = get_object_or_404(queryset, pk=self.kwargs["pk"])
-        self.check_object_permissions(self.request, obj)
-        return obj
-    
     def update(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Метод PUT не разрешен."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+        return super().update(request, *args, **kwargs)
