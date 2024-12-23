@@ -38,26 +38,26 @@ from rest_framework.pagination import PageNumberPagination
 
 @api_view(['POST'])
 def singup(request):
-
     serializer = SingupSerializer(data=request.data)
     if serializer.is_valid():
-        user, _ = User.objects.get_or_create(**serializer.validated_data)
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject='Код подтверждения',
-            from_email='',
-            message=f'{confirmation_code}',
-            recipient_list=[user.email]
-        )
-        return Response(
-            serializer.data,
-            status=status.HTTP_200_OK
-        )
-    else:
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        email = serializer.validated_data['email']
+        username = serializer.validated_data['username']
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"email": "Пользователь с таким email уже существует."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        user, created = User.objects.get_or_create(username=username, email=email)
+        if created:
+            confirmation_code = default_token_generator.make_token(user)
+            send_mail(
+                subject='Код подтверждения',
+                from_email='',
+                message=f'{confirmation_code}',
+                recipient_list=[user.email]
+            )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -159,31 +159,62 @@ class ReviewRetrievePatchDestroyView(
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().order_by('name')
     serializer_class = CategorySerializer
     permission_classes = (IsSuperUserOrAdmin,)
-    queryset = Category.objects.all().order_by('name')
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'slug']
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 
 class GenreViewSet(viewsets.ModelViewSet):
-    queryset = Genre.objects.all()
+    queryset = Genre.objects.all().order_by('name')
     serializer_class = GenreSerializer
     permission_classes = (IsSuperUserOrAdmin,)
-    queryset = Genre.objects.all().order_by('name')
     filter_backends = [filters.SearchFilter]
     search_fields = ['name']
+    lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
+
+    def partial_update(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-    permission_classes = (IsSuperUserOrAdmin,)
     queryset = Title.objects.all().order_by('name')
+    serializer_class = TitleSerializer
+    permission_classes = [permissions.IsAuthenticated, IsSuperUserOrAdmin]
+    
+    def update(self, request, *args, **kwargs):
+        return Response(
+            {'detail': 'Метод не разрешен.'},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsOwnerOrReadOnly, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsOwnerOrStaff, permissions.IsAuthenticated]
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
@@ -200,3 +231,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         obj = get_object_or_404(queryset, pk=self.kwargs["pk"])
         self.check_object_permissions(self.request, obj)
         return obj
+    
+    def update(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Метод PUT не разрешен."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED
+        )
