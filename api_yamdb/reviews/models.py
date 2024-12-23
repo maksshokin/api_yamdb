@@ -1,60 +1,55 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from reviews.validators import ValidateUsername
 
-ADMIN = 'admin'
-MODERATOR = 'moderator'
-USER = 'user'
-ROLES = [
-    (USER, 'user'),
-    (MODERATOR, 'moderator'),
-    (ADMIN, 'admin'),
-]
 
-class User(AbstractUser):
-    username = models.CharField(
-        max_length=150,
-        unique=True,
-        blank=False,
-        null=False,
+class User(AbstractUser, ValidateUsername):
+    ADMIN = 'admin'
+    MODERATOR = 'moderator'
+    USER = 'user'
+
+    ROLES = (
+        (ADMIN, 'Администратор'),
+        (MODERATOR, 'Модератор'),
+        (USER, 'Пользователь'),
     )
+
     email = models.EmailField(
         max_length=254,
-        unique=True,
-        blank=False,
-        null=False,
+        unique=True
+    )
+    username = models.CharField(
+        max_length=150,
+        unique=True
     )
     role = models.CharField(
-        max_length=20,
-        choices=ROLES,
-        default='user',
-        blank=True,
+        max_length=25,
+        choices=ROLES, default=USER
     )
     bio = models.TextField(
-        blank=True,
-    )
-    first_name = models.CharField(
-        max_length=150,
-        blank=True,
-    )
-    last_name = models.CharField(
-        max_length=150,
-        blank=True,
-    )
-    confirmation_code = models.CharField(
-        max_length=255,
         null=True,
-        blank=False,
+        blank=True
     )
+
+    @property
+    def is_moderator(self):
+        return self.role == self.MODERATOR
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN or self.is_superuser or self.is_staff
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    class Meta:
+        ordering = ('id',)
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
 
     def __str__(self):
         return self.username
-
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        ordering = ('id',)
-
 
 class Category(models.Model):
     name = models.CharField(max_length=256)

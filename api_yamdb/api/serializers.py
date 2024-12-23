@@ -1,8 +1,7 @@
 from rest_framework import serializers
 from django.db.models import Avg
 from django.utils.text import slugify
-from rest_framework.validators import UniqueValidator
-
+from reviews.validators import ValidateUsername
 from reviews.models import (
     User,
     Category,
@@ -12,8 +11,7 @@ from reviews.models import (
     Comment
 )
 
-
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer, ValidateUsername):
 
     class Meta:
         model = User
@@ -25,74 +23,45 @@ class UserSerializer(serializers.ModelSerializer):
             'bio',
             'role'
         )
-        read_only_fields = ('role',)
-        lookup_field = 'username'
+        lookup_field = ('username',)
 
 
-class AdminUserSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
-        )
-    
+class SingupSerializer(serializers.Serializer, ValidateUsername):
 
-class SingUpSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-        )
-
-    def validate(self, data):
-        if User.objects.filter(email=data.get('email')):
-            raise serializers.ValidationError(
-                'Вы уже зарегестрированы!'
-            )
-        if User.objects.filter(username=data.get('username')):
-            raise serializers.ValidationError(
-                'Это имя занято!'
-            )
-        if 'me' == data.get('username'):
-            raise serializers.ValidationError(
-                'Нельзя использовать me!'
-            )
-        return data
-
-
-class TokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
-        required=True
+        required=True,
+        max_length=150
     )
-    confirmation_code = serializers.CharField(
-        required=True
+    email = serializers.EmailField(
+        required=True,
+        max_length=255
     )
 
-    def validate(self, data):
-        if User.objects.filter(username=data.get('username')):
-            raise serializers.ValidationError(
-                'Имя занято'
-            )
-        if User.objects.filter(email=data.get('email')):
-            raise serializers.ValidationError(
-                'email уже используется'
-            )
-        return data
+
+class TokenSerializer(serializers.Serializer, ValidateUsername):
+
+    username = serializers.CharField(
+        required=True,
+        max_length=150
+    )
+    confirmation_code = serializers.CharField(required=True)
+
+
+class MeSerializer(serializers.ModelSerializer, ValidateUsername):
+
+    role = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
         fields = (
             'username',
-            'confirmation_code'
+            'email',
+            'first_name',
+            'last_name',
+            'bio',
+            'role'
         )
+        lookup_field = ('username',)
 
 
 class ReviewSerializer(serializers.ModelSerializer):
