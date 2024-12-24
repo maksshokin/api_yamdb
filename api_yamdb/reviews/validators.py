@@ -12,6 +12,6 @@ class ValidateUsername:
             raise ValidationError(f'Нельзя использовать {error}!')
         if username == 'me':
             raise ValidationError('Нельзя использовать me!')
-        if len(username) >150:
+        if len(username) > 150:
             raise ValidationError('Слишком длинный ник!')
         return username

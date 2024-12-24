@@ -58,7 +58,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=256)
@@ -93,7 +93,7 @@ class Review(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('title', 'author') 
+        unique_together = ('title', 'author')
 
     def __str__(self):
         return f"Review by {self.author.username} on {self.title.name}"

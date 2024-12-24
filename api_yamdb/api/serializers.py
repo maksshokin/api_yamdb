@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.db.models import Avg
-from django.utils.text import slugify
 from reviews.validators import ValidateUsername
 from reviews.models import (
     User,
@@ -10,6 +9,7 @@ from reviews.models import (
     Title,
     Comment
 )
+
 
 class UserSerializer(serializers.ModelSerializer, ValidateUsername):
 
@@ -78,7 +78,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def validate_score(self, value):
         if not 1 <= value <= 10:
-            raise serializers.ValidationError("Score must be between 1 and 10.")
+            raise serializers.ValidationError(
+                "Score must be between 1 and 10."
+            )
         return value
 
     def validate(self, data):
@@ -119,7 +121,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class TitleSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
         slug_field='slug', queryset=Genre.objects.all(), many=True
-    ) 
+    )
     category = serializers.SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
     )
@@ -135,7 +137,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         self.fields['category'] = CategorySerializer()
-        self.fields['genre'] = GenreSerializer(many=True) 
+        self.fields['genre'] = GenreSerializer(many=True)
         return super().to_representation(instance)
 
     def create(self, validated_data):
@@ -147,12 +149,17 @@ class TitleSerializer(serializers.ModelSerializer):
 
     def validate_name(self, value):
         if len(value) > 256:
-            raise serializers.ValidationError("Название произведения не может быть длиннее 256 символов.")
+            raise serializers.ValidationError(
+                "Название не может быть длиннее 256 символов."
+            )
         return value
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True
+    )
 
     class Meta:
         fields = ('id', 'text', 'author', 'pub_date')

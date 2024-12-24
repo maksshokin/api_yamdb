@@ -28,7 +28,10 @@ class Command(BaseCommand):
         with open('static/data/category.csv', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                Category.objects.get_or_create(name=row['name'], slug=row['slug'])
+                Category.objects.get_or_create(
+                    name=row['name'],
+                    slug=row['slug']
+                )
 
         with open('static/data/genre.csv', encoding='utf-8') as file:
             reader = csv.DictReader(file)
@@ -44,14 +47,14 @@ class Command(BaseCommand):
                     year=row['year'],
                     category=category
                 )
-        
+
         with open('static/data/genre_title.csv', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 title = Title.objects.get(id=row['title_id'])
                 genre = Genre.objects.get(id=row['genre_id'])
                 title.genre.add(genre)
-        
+
         with open('static/data/review.csv', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
@@ -65,7 +68,7 @@ class Command(BaseCommand):
                     score=row['score'],
                     pub_date=row['pub_date']
                 )
-        
+
         with open('static/data/comments.csv', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:

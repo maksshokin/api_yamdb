@@ -27,7 +27,14 @@ from reviews.models import (
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
-from rest_framework import filters, viewsets, status, permissions, generics, mixins
+from rest_framework import (
+    filters,
+    viewsets,
+    status,
+    permissions,
+    generics,
+    mixins
+)
 from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -87,14 +94,15 @@ def token(request):
             )
         else:
             return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
     else:
         return Response(
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+
 
 class UserViewSet(viewsets.ModelViewSet):
 
@@ -127,6 +135,7 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class ReviewListCreateView(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
@@ -207,9 +216,6 @@ class GenreViewSet(viewsets.ModelViewSet):
         )
 
 
-
-
-
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().order_by('name')
     serializer_class = TitleSerializer
@@ -226,7 +232,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
-    
+
     def get_queryset(self):
         queryset = Title.objects.all()
 
@@ -236,14 +242,17 @@ class TitleViewSet(viewsets.ModelViewSet):
         year = self.request.query_params.get('year')
 
         if genre:
-            queryset = queryset.filter(genre__slug__iexact=genre)  # Case-insensitive exact match
+            queryset = queryset.filter(
+                genre__slug__iexact=genre
+            )
 
         if category:
-            queryset = queryset.filter(category__slug__iexact=category)  # Case-insensitive exact match
-
+            queryset = queryset.filter(
+                category__slug__iexact=category
+            )
 
         if name:
-            queryset = queryset.filter(name__icontains=name)  # Case-insensitive contains
+            queryset = queryset.filter(name__icontains=name)
 
         if year:
             queryset = queryset.filter(year=year)
@@ -253,12 +262,17 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrStaff]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrStaff
+    ]
     pagination_class = PageNumberPagination
 
     def get_queryset(self):
         review_id = self.kwargs.get('review_id')
-        return Comment.objects.filter(review_id=review_id).order_by('-pub_date')
+        return Comment.objects.filter(
+            review_id=review_id
+        ).order_by('-pub_date')
 
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')
