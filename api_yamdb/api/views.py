@@ -222,6 +222,29 @@ class TitleViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
+    
+    def get_queryset(self):
+        queryset = Title.objects.all()
+
+        genre = self.request.query_params.get('genre')
+        category = self.request.query_params.get('category')
+        name = self.request.query_params.get('name')
+        year = self.request.query_params.get('year')
+
+        if genre:
+            queryset = queryset.filter(genre__slug__iexact=genre)  # Case-insensitive exact match
+
+        if category:
+            queryset = queryset.filter(category__slug__iexact=category)  # Case-insensitive exact match
+
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)  # Case-insensitive contains
+
+        if year:
+            queryset = queryset.filter(year=year)
+
+        return queryset.order_by('name')
 
 
 class CommentViewSet(viewsets.ModelViewSet):
