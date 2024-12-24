@@ -207,9 +207,6 @@ class GenreViewSet(viewsets.ModelViewSet):
         )
 
 
-
-
-
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().order_by('name')
     serializer_class = TitleSerializer
@@ -229,25 +226,18 @@ class TitleViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         queryset = Title.objects.all()
-
         genre = self.request.query_params.get('genre')
         category = self.request.query_params.get('category')
         name = self.request.query_params.get('name')
         year = self.request.query_params.get('year')
-
         if genre:
-            queryset = queryset.filter(genre__slug__iexact=genre)  # Case-insensitive exact match
-
+            queryset = queryset.filter(genre__slug__iexact=genre)
         if category:
-            queryset = queryset.filter(category__slug__iexact=category)  # Case-insensitive exact match
-
-
+            queryset = queryset.filter(category__slug__iexact=category)
         if name:
-            queryset = queryset.filter(name__icontains=name)  # Case-insensitive contains
-
+            queryset = queryset.filter(name__icontains=name)
         if year:
             queryset = queryset.filter(year=year)
-
         return queryset.order_by('name')
 
 
