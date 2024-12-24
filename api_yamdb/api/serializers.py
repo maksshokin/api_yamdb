@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from django.db.models import Avg
-from django.utils.text import slugify
 from reviews.validators import ValidateUsername
 from reviews.models import (
     User,
