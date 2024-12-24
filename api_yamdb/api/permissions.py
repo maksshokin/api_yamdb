@@ -28,7 +28,7 @@ class IsOwnerOrStaff(permissions.BasePermission):
         return (
             request.user.is_authenticated and (
                 obj.author == request.user or
-                request.user.is_superuser or
-                request.user.role in ('admin', 'moderator')
+                request.user.is_admin or
+                request.user.is_moderator
             )
         )

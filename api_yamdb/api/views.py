@@ -212,7 +212,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().order_by('name')
     serializer_class = TitleSerializer
     permission_classes = (
-        permissions.IsAuthenticatedOrReadOnly,
         IsSuperUserOrAdmin,
     )
     http_method_names = [
