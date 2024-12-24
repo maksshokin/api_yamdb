@@ -24,7 +24,7 @@ from reviews.models import (
     Comment,
 )
 
-from django.forms import ValidationError
+
 from django.db import IntegrityError
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
@@ -41,7 +41,15 @@ def singup(request):
 
     serializer = SingupSerializer(data=request.data)
     if serializer.is_valid():
-        user, _ = User.objects.get_or_create(**serializer.validated_data)
+        try:
+            user, cteated = User.objects.get_or_create(
+                **serializer.validated_data
+            )
+        except IntegrityError:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
             subject='Код подтверждения',
@@ -203,8 +211,17 @@ class GenreViewSet(viewsets.ModelViewSet):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().order_by('name')
     serializer_class = TitleSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        IsSuperUserOrAdmin,
+    )
+    http_method_names = [
+        'post',
+        'get',
+        'patch',
+        'delete'
+    ]
+
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 
