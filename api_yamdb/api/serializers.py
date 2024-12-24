@@ -135,6 +135,7 @@ class TitleSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         self.fields['category'] = CategorySerializer()
+        self.fields['genre'] = GenreSerializer(many=True) 
         return super().to_representation(instance)
 
     def create(self, validated_data):
