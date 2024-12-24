@@ -12,7 +12,6 @@ from api.serializers import (
 from api.permissions import (
     UserAdmin,
     IsSuperUserOrAdmin,
-    IsOwnerOrReadOnly,
     IsOwnerOrStaff
 )
 from reviews.models import (
