@@ -21,62 +21,35 @@ from reviews.models import Category, Comment, Genre, Review, Title, User
 def singup(request):
 
     serializer = SingupSerializer(data=request.data)
-    if serializer.is_valid():
-        try:
-            user, cteated = User.objects.get_or_create(
-                **serializer.validated_data
-            )
-        except IntegrityError:
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        confirmation_code = default_token_generator.make_token(user)
-        send_mail(
-            subject='Код подтверждения',
-            from_email='',
-            message=f'{confirmation_code}',
-            recipient_list=[user.email]
-        )
-        return Response(
-            serializer.data,
-            status=status.HTTP_200_OK
-        )
-    else:
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+    serializer.is_valid(raise_exception=True)
+    user = serializer.save()
+    confirmation_code = default_token_generator.make_token(user)
+    send_mail(
+        subject='Код подтверждения',
+        from_email='',
+        message=f'{confirmation_code}',
+        recipient_list=[user.email]
+    )
+    return Response(
+        serializer.data,
+        status=status.HTTP_200_OK
+    )
 
 
 @api_view(['POST'])
 def token(request):
 
     serializer = TokenSerializer(data=request.data)
-    if serializer.is_valid():
-        user = get_object_or_404(
-            User,
-            username=serializer.validated_data['username']
-        )
-        if default_token_generator.check_token(
-                user,
-                serializer.validated_data['confirmation_code']
-        ):
-            token = RefreshToken.for_user(user)
-            return Response(
-                str(token.access_token),
-                status=status.HTTP_200_OK
-            )
-        else:
-            return Response(
-                serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST
-            )
-    else:
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+    serializer.is_valid(raise_exception=True)
+    user = get_object_or_404(
+        User,
+        username=serializer.validated_data['username']
+    )
+    token = RefreshToken.for_user(user)
+    return Response(
+        str(token.access_token),
+        status=status.HTTP_200_OK
+    )
 
 
 class UserViewSet(viewsets.ModelViewSet):

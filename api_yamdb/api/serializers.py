@@ -1,4 +1,7 @@
+from django.db import IntegrityError
 from django.db.models import Avg
+from django.contrib.auth.tokens import default_token_generator
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from reviews.models import Category, Comment, Genre, Review, Title, User
@@ -17,7 +20,11 @@ class UserSerializer(serializers.ModelSerializer, ValidateUsername):
             'bio',
             'role'
         )
-        lookup_field = ('username',)
+
+
+class MeSerializer(UserSerializer, ValidateUsername):
+
+    role = serializers.CharField(read_only=True)
 
 
 class SingupSerializer(serializers.Serializer, ValidateUsername):
@@ -31,6 +38,12 @@ class SingupSerializer(serializers.Serializer, ValidateUsername):
         max_length=254
     )
 
+    def create(self, validated_data):
+        try:
+            user, _ = User.objects.get_or_create(**validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError()
+        return user
 
 class TokenSerializer(serializers.Serializer, ValidateUsername):
 
@@ -40,22 +53,17 @@ class TokenSerializer(serializers.Serializer, ValidateUsername):
     )
     confirmation_code = serializers.CharField(required=True)
 
-
-class MeSerializer(serializers.ModelSerializer, ValidateUsername):
-
-    role = serializers.CharField(read_only=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'bio',
-            'role'
+    def validate(self, validated_data):
+        user = get_object_or_404( 
+            User, 
+            username=validated_data['username'] 
         )
-        lookup_field = ('username',)
+        if default_token_generator.check_token( 
+                user, 
+                validated_data['confirmation_code'] 
+        ):
+            return validated_data
+        raise serializers.ValidationError()
 
 
 class ReviewSerializer(serializers.ModelSerializer):
