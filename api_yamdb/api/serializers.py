@@ -1,3 +1,9 @@
+from api.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
+                           USERNAME_MAX_LENGTH)
+from django.db.models import Avg
+from rest_framework import serializers
+from reviews.models import Category, Comment, Genre, Review, Title, User
+from reviews.validators import ValidateUsername
 from django.db import IntegrityError
 from django.db.models import Avg
 from django.contrib.auth.tokens import default_token_generator
@@ -26,16 +32,15 @@ class MeSerializer(UserSerializer, ValidateUsername):
 
     role = serializers.CharField(read_only=True)
 
-
-class SingupSerializer(serializers.Serializer, ValidateUsername):
+class SingupSerializer(serializers.Serializer):
 
     username = serializers.CharField(
         required=True,
-        max_length=150
+        max_length=USERNAME_MAX_LENGTH,
     )
     email = serializers.EmailField(
         required=True,
-        max_length=254
+        max_length=EMAIL_MAX_LENGTH
     )
 
     def create(self, validated_data):
@@ -49,7 +54,7 @@ class TokenSerializer(serializers.Serializer, ValidateUsername):
 
     username = serializers.CharField(
         required=True,
-        max_length=150
+        max_length=USERNAME_MAX_LENGTH
     )
     confirmation_code = serializers.CharField(required=True)
 
@@ -67,21 +72,21 @@ class TokenSerializer(serializers.Serializer, ValidateUsername):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
-    pub_date = serializers.SerializerMethodField(read_only=True)
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
 
     class Meta:
         model = Review
         fields = ['id', 'text', 'score', 'author', 'pub_date']
-        read_only_fields = ['id', 'author', 'pub_date']
 
     def get_pub_date(self, obj):
         return obj.pub_date.strftime('%Y-%m-%d')
 
     def validate_score(self, value):
-        if not 1 <= value <= 10:
+        if not MIN_SCORE <= value <= MAX_SCORE:
             raise serializers.ValidationError(
-                "Score must be between 1 and 10."
+                f"Score must be between {MIN_SCORE} and {MAX_SCORE}."
             )
         return value
 

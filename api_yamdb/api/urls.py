@@ -1,9 +1,7 @@
+from api.views import (CategoryViewSet, CommentViewSet, GenreViewSet,
+                       ReviewViewSet, TitleViewSet, UserViewSet, singup, token)
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-
-from api.views import (CategoryViewSet, CommentViewSet, GenreViewSet,
-                       ReviewListCreateView, ReviewRetrievePatchDestroyView,
-                       TitleViewSet, UserViewSet, singup, token)
 
 v1_router = DefaultRouter()
 
@@ -18,53 +16,32 @@ v1_router.register(
     basename='categories'
 )
 v1_router.register(
-    r'genres',
+    'genres',
     GenreViewSet,
     basename='genres'
 )
 v1_router.register(
-    r'titles',
+    'titles',
     TitleViewSet,
     basename='titles'
 )
+v1_router.register(
+    r'titles/(?P<title_id>\d+)/reviews',
+    ReviewViewSet,
+    basename='reviews'
+)
+v1_router.register(
+    r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
+    CommentViewSet,
+    basename='comments'
+)
 
+auth_urls = [
+    path('signup/', singup, name='singup'),
+    path('token/', token, name='token'),
+]
 
 urlpatterns = [
-    path(
-        'auth/signup/',
-        singup,
-        name='singup',
-    ),
-    path(
-        'auth/token/',
-        token,
-        name='token'
-    ),
-    path(
-        'titles/<int:title_id>/reviews/',
-        ReviewListCreateView.as_view(),
-        name='review-list'
-    ),
-    path(
-        'titles/<int:title_id>/reviews/<int:pk>/',
-        ReviewRetrievePatchDestroyView.as_view(),
-        name='review-detail'
-    ),
-    path(
-        'titles/<int:title_id>/reviews/<int:review_id>/comments/',
-        CommentViewSet.as_view(actions={'get': 'list', 'post': 'create'}),
-        name='create_comment'
-    ),
-    path(
-        'titles/<int:title_id>/reviews/<int:review_id>/comments/<int:pk>/',
-        CommentViewSet.as_view(
-            actions={
-                'get': 'retrieve',
-                'delete': 'destroy',
-                'patch': 'partial_update'
-            }
-        ),
-        name='comment-detail'
-    ),
+    path('auth/', include(auth_urls)),
     path('', include(v1_router.urls)),
 ]
