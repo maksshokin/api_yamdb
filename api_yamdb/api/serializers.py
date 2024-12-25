@@ -1,14 +1,8 @@
-from rest_framework import serializers
+from api.constants import EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH, MIN_SCORE, MAX_SCORE
 from django.db.models import Avg
+from rest_framework import serializers
+from reviews.models import Category, Comment, Genre, Review, Title, User
 from reviews.validators import ValidateUsername
-from reviews.models import (
-    User,
-    Category,
-    Genre,
-    Review,
-    Title,
-    Comment
-)
 
 
 class UserSerializer(serializers.ModelSerializer, ValidateUsername):
@@ -23,18 +17,17 @@ class UserSerializer(serializers.ModelSerializer, ValidateUsername):
             'bio',
             'role'
         )
-        lookup_field = ('username',)
 
 
 class SingupSerializer(serializers.Serializer, ValidateUsername):
 
     username = serializers.CharField(
         required=True,
-        max_length=150
+        max_length=USERNAME_MAX_LENGTH
     )
     email = serializers.EmailField(
         required=True,
-        max_length=254
+        max_length=EMAIL_MAX_LENGTH
     )
 
 
@@ -42,7 +35,7 @@ class TokenSerializer(serializers.Serializer, ValidateUsername):
 
     username = serializers.CharField(
         required=True,
-        max_length=150
+        max_length=USERNAME_MAX_LENGTH
     )
     confirmation_code = serializers.CharField(required=True)
 
@@ -65,21 +58,21 @@ class MeSerializer(serializers.ModelSerializer, ValidateUsername):
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
-    pub_date = serializers.SerializerMethodField(read_only=True)
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
 
     class Meta:
         model = Review
         fields = ['id', 'text', 'score', 'author', 'pub_date']
-        read_only_fields = ['id', 'author', 'pub_date']
 
     def get_pub_date(self, obj):
         return obj.pub_date.strftime('%Y-%m-%d')
 
     def validate_score(self, value):
-        if not 1 <= value <= 10:
+        if not MIN_SCORE <= value <= MAX_SCORE:
             raise serializers.ValidationError(
-                "Score must be between 1 and 10."
+                f"Score must be between {MIN_SCORE} and {MAX_SCORE}."
             )
         return value
 
@@ -101,21 +94,11 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['name', 'slug']
 
-    def validate_slug(self, value):
-        if Category.objects.filter(slug=value).exists():
-            raise serializers.ValidationError("Этот slug уже используется.")
-        return value
-
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ['name', 'slug']
-
-    def validate_slug(self, value):
-        if self.instance is None and Genre.objects.filter(slug=value).exists():
-            raise serializers.ValidationError("Этот slug уже используется.")
-        return value
 
 
 class TitleSerializer(serializers.ModelSerializer):
