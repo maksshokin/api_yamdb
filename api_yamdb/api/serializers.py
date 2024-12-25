@@ -103,26 +103,19 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['name', 'slug']
 
-    def validate_slug(self, value):
-        if Category.objects.filter(slug=value).exists():
-            raise serializers.ValidationError("Этот slug уже используется.")
-        return value
-
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
         fields = ['name', 'slug']
 
-    def validate_slug(self, value):
-        if self.instance is None and Genre.objects.filter(slug=value).exists():
-            raise serializers.ValidationError("Этот slug уже используется.")
-        return value
-
 
 class TitleSerializer(serializers.ModelSerializer):
     genre = serializers.SlugRelatedField(
-        slug_field='slug', queryset=Genre.objects.all(), many=True
+        slug_field='slug',
+        queryset=Genre.objects.all(),
+        many=True,
+        required=True
     )
     category = serializers.SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
@@ -141,20 +134,6 @@ class TitleSerializer(serializers.ModelSerializer):
         self.fields['category'] = CategorySerializer()
         self.fields['genre'] = GenreSerializer(many=True)
         return super().to_representation(instance)
-
-    def create(self, validated_data):
-        genres = validated_data.pop('genre')
-        title = Title.objects.create(**validated_data)
-        for genre in genres:
-            title.genre.add(genre)
-        return title
-
-    def validate_name(self, value):
-        if len(value) > 256:
-            raise serializers.ValidationError(
-                "Название не может быть длиннее 256 символов."
-            )
-        return value
 
 
 class CommentSerializer(serializers.ModelSerializer):
