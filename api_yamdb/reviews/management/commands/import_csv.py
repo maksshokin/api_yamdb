@@ -1,7 +1,6 @@
 import csv
 import os
 
-from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
 from reviews.constants import (
@@ -52,7 +51,7 @@ class Command(BaseCommand):
             reader = csv.DictReader(file)
             for row in reader:
                 Genre.objects.get_or_create(
-                    name=row['name'], 
+                    name=row['name'],
                     slug=row['slug'],
                 )
 
