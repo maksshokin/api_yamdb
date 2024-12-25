@@ -1,4 +1,5 @@
-from api.constants import EMAIL_MAX_LENGTH, USERNAME_MAX_LENGTH, MIN_SCORE, MAX_SCORE
+from api.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
+                           USERNAME_MAX_LENGTH)
 from django.db.models import Avg
 from rest_framework import serializers
 from reviews.models import Category, Comment, Genre, Review, Title, User
@@ -19,11 +20,12 @@ class UserSerializer(serializers.ModelSerializer, ValidateUsername):
         )
 
 
-class SingupSerializer(serializers.Serializer, ValidateUsername):
+class SingupSerializer(serializers.Serializer):
 
     username = serializers.CharField(
         required=True,
-        max_length=USERNAME_MAX_LENGTH
+        max_length=USERNAME_MAX_LENGTH,
+        validators=[ValidateUsername()]
     )
     email = serializers.EmailField(
         required=True,

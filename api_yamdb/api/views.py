@@ -18,7 +18,6 @@ from reviews.models import Category, Comment, Genre, Review, Title, User
 
 @api_view(['POST'])
 def singup(request):
-
     serializer = SingupSerializer(data=request.data)
     if serializer.is_valid():
         try:
