@@ -37,6 +37,7 @@ class SingupSerializer(serializers.Serializer):
     username = serializers.CharField(
         required=True,
         max_length=USERNAME_MAX_LENGTH,
+        validators=[ValidateUsername()]
     )
     email = serializers.EmailField(
         required=True,
