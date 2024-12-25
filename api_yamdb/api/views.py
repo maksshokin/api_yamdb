@@ -1,20 +1,49 @@
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+from api.serializers import (
+    SingupSerializer,
+    MeSerializer,
+    UserSerializer,
+    ReviewSerializer,
+    TokenSerializer,
+    CategorySerializer,
+    GenreSerializer,
+    TitleSerializer,
+    CommentSerializer
+)
+from api.permissions import (
+    UserAdmin,
+    IsSuperUserOrAdmin,
+    IsOwnerOrStaff
+)
+from reviews.models import (
+    User,
+    Category,
+    Genre,
+    Review,
+    Title,
+    Comment,
+)
+
+
 from django.db import IntegrityError
-from django.shortcuts import get_object_or_404
-from rest_framework import (filters, generics, mixins, permissions, status,
-                            viewsets)
+from django.db.models import Avg
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
+from rest_framework import (
+    filters,
+    viewsets,
+    status,
+    permissions,
+    generics,
+    mixins
+)
 from rest_framework.decorators import action, api_view
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-
-from api.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
-from api.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, MeSerializer, ReviewSerializer,
-                             SingupSerializer, TitleSerializer,
-                             TokenSerializer, UserSerializer)
-from reviews.models import Category, Comment, Genre, Review, Title, User
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from django_filters import CharFilter, NumberFilter
+from django.shortcuts import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['POST'])
