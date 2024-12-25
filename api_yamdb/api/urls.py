@@ -21,7 +21,7 @@ v1_router.register(
     basename='users'
 )
 v1_router.register(
-    r'categories',
+    'categories',
     CategoryViewSet,
     basename='categories'
 )
