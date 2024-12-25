@@ -25,6 +25,7 @@ from reviews.models import (
 
 
 from django.db import IntegrityError
+from django.db.models import Avg
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework import (
@@ -36,8 +37,11 @@ from rest_framework import (
     mixins
 )
 from rest_framework.decorators import action, api_view
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
+from django_filters import CharFilter, NumberFilter
 from django.shortcuts import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 
@@ -178,17 +182,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().order_by('name')
     serializer_class = CategorySerializer
     permission_classes = (IsSuperUserOrAdmin,)
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [SearchFilter]
     search_fields = ['name', 'slug']
     lookup_field = 'slug'
+    http_method_names = ['get', 'post', 'delete']
 
     def retrieve(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Метод не разрешен."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
-
-    def partial_update(self, request, *args, **kwargs):
         return Response(
             {"detail": "Метод не разрешен."},
             status=status.HTTP_405_METHOD_NOT_ALLOWED
@@ -199,9 +198,10 @@ class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all().order_by('name')
     serializer_class = GenreSerializer
     permission_classes = (IsSuperUserOrAdmin,)
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [SearchFilter]
     search_fields = ['name']
     lookup_field = 'slug'
+    http_method_names = ['get', 'post', 'delete']
 
     def retrieve(self, request, *args, **kwargs):
         return Response(
@@ -209,55 +209,41 @@ class GenreViewSet(viewsets.ModelViewSet):
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
 
-    def partial_update(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Метод не разрешен."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
+
+class TitleFilter(FilterSet):
+    genre = CharFilter(
+        field_name="genre__slug",
+        lookup_expr="iexact"
+    )
+    category = CharFilter(
+        field_name="category__slug",
+        lookup_expr="iexact"
+    )
+    name = CharFilter(
+        field_name="name",
+        lookup_expr="icontains"
+    )
+    year = NumberFilter(field_name="year")
+
+    class Meta:
+        model = Title
+        fields = ["genre", "category", "name", "year"]
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().order_by('name')
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    ).order_by('name')
     serializer_class = TitleSerializer
-    permission_classes = (
-        IsSuperUserOrAdmin,
-    )
-
+    permission_classes = (IsSuperUserOrAdmin,)
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_class = TitleFilter
     http_method_names = [
         'post',
         'get',
         'patch',
         'delete'
     ]
-
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
-
-    def get_queryset(self):
-        queryset = Title.objects.all()
-
-        genre = self.request.query_params.get('genre')
-        category = self.request.query_params.get('category')
-        name = self.request.query_params.get('name')
-        year = self.request.query_params.get('year')
-
-        if genre:
-            queryset = queryset.filter(
-                genre__slug__iexact=genre
-            )
-
-        if category:
-            queryset = queryset.filter(
-                category__slug__iexact=category
-            )
-
-        if name:
-            queryset = queryset.filter(name__icontains=name)
-
-        if year:
-            queryset = queryset.filter(year=year)
-
-        return queryset.order_by('name')
 
 
 class CommentViewSet(viewsets.ModelViewSet):
