@@ -132,7 +132,7 @@ class Review(models.Model):
     )
     author = models.ForeignKey(
         User,
-        verbose_name='Автор', 
+        verbose_name='Автор',
         related_name='reviews',
         on_delete=models.CASCADE
     )
@@ -140,8 +140,14 @@ class Review(models.Model):
     score = models.PositiveSmallIntegerField(
         verbose_name='Оценка',
         validators=[
-            MinValueValidator(MIN_SCORE, message='Оценка должна быть не меньше 1.'),
-            MaxValueValidator(MAX_SCORE, message='Оценка должна быть не больше 10.')
+            MinValueValidator(
+                MIN_SCORE,
+                message='Оценка должна быть не меньше 1.'
+            ),
+            MaxValueValidator(
+                MAX_SCORE,
+                message='Оценка должна быть не больше 10.'
+            )
         ]
     )
     pub_date = models.DateTimeField(

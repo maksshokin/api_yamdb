@@ -32,6 +32,7 @@ class MeSerializer(UserSerializer, ValidateUsername):
 
     role = serializers.CharField(read_only=True)
 
+
 class SingupSerializer(serializers.Serializer):
 
     username = serializers.CharField(
@@ -51,6 +52,7 @@ class SingupSerializer(serializers.Serializer):
             raise serializers.ValidationError()
         return user
 
+
 class TokenSerializer(serializers.Serializer, ValidateUsername):
 
     username = serializers.CharField(
@@ -60,13 +62,13 @@ class TokenSerializer(serializers.Serializer, ValidateUsername):
     confirmation_code = serializers.CharField(required=True)
 
     def validate(self, validated_data):
-        user = get_object_or_404( 
-            User, 
-            username=validated_data['username'] 
+        user = get_object_or_404(
+            User,
+            username=validated_data['username']
         )
-        if default_token_generator.check_token( 
-                user, 
-                validated_data['confirmation_code'] 
+        if default_token_generator.check_token(
+                user,
+                validated_data['confirmation_code']
         ):
             return validated_data
         raise serializers.ValidationError()

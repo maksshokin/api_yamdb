@@ -1,11 +1,10 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.db import IntegrityError
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters import CharFilter, NumberFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
-from rest_framework import (filters, generics, mixins, permissions, status,
+from rest_framework import (filters, generics, permissions, status,
                             viewsets)
 from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
@@ -18,7 +17,7 @@ from api.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, MeSerializer, ReviewSerializer,
                              SingupSerializer, TitleSerializer,
                              TokenSerializer, UserSerializer)
-from reviews.models import Category, Comment, Genre, Review, Title, User
+from reviews.models import Category, Genre, Review, Title, User
 
 
 @api_view(['POST'])
