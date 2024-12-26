@@ -9,6 +9,7 @@ from django.db.models import Avg
 from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+from django.core.mail import send_mail
 
 from reviews.models import Category, Comment, Genre, Review, Title, User
 from reviews.validators import ValidateUsername
@@ -50,6 +51,13 @@ class SingupSerializer(serializers.Serializer):
             user, _ = User.objects.get_or_create(**validated_data)
         except IntegrityError:
             raise serializers.ValidationError()
+        confirmation_code = default_token_generator.make_token(user)
+        send_mail(
+            subject='Код подтверждения',
+            from_email='',
+            message=f'{confirmation_code}',
+            recipient_list=[user.email]
+        )
         return user
 
 

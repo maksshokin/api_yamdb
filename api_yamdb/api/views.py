@@ -1,5 +1,5 @@
 from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
+
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters import CharFilter, NumberFilter
@@ -25,14 +25,7 @@ def singup(request):
 
     serializer = SingupSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    user = serializer.save()
-    confirmation_code = default_token_generator.make_token(user)
-    send_mail(
-        subject='Код подтверждения',
-        from_email='',
-        message=f'{confirmation_code}',
-        recipient_list=[user.email]
-    )
+    serializer.save()
     return Response(
         serializer.data,
         status=status.HTTP_200_OK
