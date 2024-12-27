@@ -35,7 +35,6 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('username', 'email', 'role', 'is_staff', 'is_superuser')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'role')
     search_fields = ('username', 'email')
-    ordering = ('username',)
     list_editable = ('role',)
 
 

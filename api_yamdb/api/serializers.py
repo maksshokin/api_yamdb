@@ -29,11 +29,6 @@ class UserSerializer(serializers.ModelSerializer, ValidateUsername):
         )
 
 
-class MeSerializer(UserSerializer, ValidateUsername):
-
-    role = serializers.CharField(read_only=True)
-
-
 class SingupSerializer(serializers.Serializer):
 
     username = serializers.CharField(
@@ -47,10 +42,7 @@ class SingupSerializer(serializers.Serializer):
     )
 
     def create(self, validated_data):
-        try:
-            user, _ = User.objects.get_or_create(**validated_data)
-        except IntegrityError:
-            raise serializers.ValidationError()
+        user, _ = User.objects.get_or_create(**validated_data)
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
             subject='Код подтверждения',
@@ -59,7 +51,19 @@ class SingupSerializer(serializers.Serializer):
             recipient_list=[user.email]
         )
         return user
-
+    
+    def validate(self, data):
+        email = data.get('email')
+        username = data.get('username')
+        if User.objects.filter(username=username, email=email).exists():
+            return data
+        elif (
+        User.objects.filter(username=username).exists()
+        or User.objects.filter(email=email).exists()
+        ):
+            raise serializers.ValidationError()
+        return data
+        
 
 class TokenSerializer(serializers.Serializer, ValidateUsername):
 
@@ -79,7 +83,9 @@ class TokenSerializer(serializers.Serializer, ValidateUsername):
                 validated_data['confirmation_code']
         ):
             return validated_data
-        raise serializers.ValidationError()
+        raise serializers.ValidationError(
+            'Confirmation_code неверный!'
+        )
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -90,9 +96,6 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['id', 'text', 'score', 'author', 'pub_date']
-
-    def get_pub_date(self, obj):
-        return obj.pub_date.strftime('%Y-%m-%d')
 
     def validate_score(self, value):
         if not MIN_SCORE <= value <= MAX_SCORE:

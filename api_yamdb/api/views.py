@@ -14,7 +14,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
 from api.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, MeSerializer, ReviewSerializer,
+                             GenreSerializer, ReviewSerializer,
                              SingupSerializer, TitleSerializer,
                              TokenSerializer, UserSerializer)
 from reviews.models import Category, Genre, Review, Title, User
@@ -67,7 +67,7 @@ class UserViewSet(viewsets.ModelViewSet):
         methods=['get', 'patch'],
         detail=False, url_path='me',
         permission_classes=[permissions.IsAuthenticated],
-        serializer_class=MeSerializer,
+        serializer_class=UserSerializer,
     )
     def get_edit_user(self, request):
         user = request.user
@@ -77,7 +77,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 user, data=request.data, partial=True
             )
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(role=user.role)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

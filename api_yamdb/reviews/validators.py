@@ -3,21 +3,18 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from api.constants import (
-    USERNAME_REGEX, RESERVED_USERNAME, USERNAME_MAX_LENGTH
+    USERNAME_REGEX, RESERVED_USERNAME
 )
 
 
 class ValidateUsername:
     def __call__(self, username):
         if username == RESERVED_USERNAME:
-            raise ValidationError('Имя пользователя "me" зарезервировано.')
+            raise ValidationError('Нельзя использовать "{RESERVED_USERNAME}".')
         if not re.fullmatch(USERNAME_REGEX, username):
             raise ValidationError(
                 'Имя пользователя содержит недопустимые символы.'
             )
-        if len(username) > USERNAME_MAX_LENGTH:
-            raise ValidationError('Слишком длинный ник!')
-        return username
 
 
 class ValidateYear:

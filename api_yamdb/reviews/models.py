@@ -50,7 +50,7 @@ class User(AbstractUser, ValidateUsername):
 
     @property
     def is_admin(self):
-        return self.role == self.ADMIN or self.is_superuser or self.is_staff
+        return self.role == self.ADMIN or self.is_staff
 
     class Meta:
         ordering = ('username',)
@@ -142,11 +142,11 @@ class Review(models.Model):
         validators=[
             MinValueValidator(
                 MIN_SCORE,
-                message='Оценка должна быть не меньше 1.'
+                message=f'Оценка должна быть не меньше {MIN_SCORE}.'
             ),
             MaxValueValidator(
                 MAX_SCORE,
-                message='Оценка должна быть не больше 10.'
+                message=f'Оценка должна быть не больше {MAX_SCORE}.'
             )
         ]
     )
@@ -179,7 +179,6 @@ class Comment(models.Model):
         verbose_name='Отзыв',
         on_delete=models.CASCADE,
         related_name='comments',
-        null=True,
         blank=True
     )
     text = models.TextField(verbose_name=u'Текст комментария')
