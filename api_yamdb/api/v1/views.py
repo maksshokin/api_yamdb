@@ -1,7 +1,6 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-from django_filters import CharFilter, NumberFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from rest_framework import filters, generics, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
@@ -10,6 +9,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from api.v1.filters import TitleFilter
 from api.v1.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
 from api.v1.serializers import (CategorySerializer, CommentSerializer,
                                 GenreSerializer, ReviewSerializer,
@@ -127,26 +127,6 @@ class GenreViewSet(viewsets.ModelViewSet):
             {"detail": "Метод не разрешен."},
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
-
-
-class TitleFilter(FilterSet):
-    genre = CharFilter(
-        field_name="genre__slug",
-        lookup_expr="iexact"
-    )
-    category = CharFilter(
-        field_name="category__slug",
-        lookup_expr="iexact"
-    )
-    name = CharFilter(
-        field_name="name",
-        lookup_expr="icontains"
-    )
-    year = NumberFilter(field_name="year")
-
-    class Meta:
-        model = Title
-        fields = ["genre", "category", "name", "year"]
 
 
 class TitleViewSet(viewsets.ModelViewSet):
