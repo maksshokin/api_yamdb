@@ -1,8 +1,7 @@
-from django.contrib.auth.tokens import default_token_generator
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet
-from rest_framework import filters, generics, permissions, status, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
@@ -35,7 +34,7 @@ class BaseCommentReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsOwnerOrStaff
-        ]
+    ]
 
     def get_review_or_title(self, model, **kwargs):
         return get_object_or_404(model, **kwargs)
@@ -43,8 +42,11 @@ class BaseCommentReviewViewSet(viewsets.ModelViewSet):
     def get_review(self):
         review_id = self.kwargs.get('review_id')
         title_id = self.kwargs.get('title_id')
-        return self.get_review_or_title(Review, id=review_id, title_id=title_id)
-
+        return self.get_review_or_title(
+            Review,
+            id=review_id,
+            title_id=title_id
+        )
 
 
 @api_view(['POST'])

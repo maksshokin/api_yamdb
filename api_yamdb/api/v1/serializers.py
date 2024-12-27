@@ -1,6 +1,5 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
@@ -46,19 +45,19 @@ class SingupSerializer(serializers.Serializer):
             recipient_list=[user.email]
         )
         return user
-    
+
     def validate(self, data):
         email = data.get('email')
         username = data.get('username')
         if User.objects.filter(username=username, email=email).exists():
             return data
         elif (
-        User.objects.filter(username=username).exists()
-        or User.objects.filter(email=email).exists()
+            User.objects.filter(username=username).exists()
+            or User.objects.filter(email=email).exists()
         ):
             raise serializers.ValidationError()
         return data
-        
+
 
 class TokenSerializer(serializers.Serializer, ValidateUsername):
 
@@ -141,7 +140,7 @@ class TitleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Title
         fields = '__all__'
-        
+
     def to_representation(self, instance):
         self.fields['category'] = CategorySerializer()
         self.fields['genre'] = GenreSerializer(many=True)

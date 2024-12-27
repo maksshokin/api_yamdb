@@ -53,7 +53,7 @@ class User(AbstractUser, ValidateUsername):
 
     def __str__(self):
         return self.username
-    
+
     @property
     def is_moderator(self):
         return self.role == self.MODERATOR
@@ -172,7 +172,7 @@ class Review(PublishedContent):
         constraints = [
             UniqueConstraint(fields=['title', 'author'], name='unique_review')
         ]
-      
+
 
 class Comment(PublishedContent):
     review = models.ForeignKey(
