@@ -1,4 +1,4 @@
-from api.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
+from api.v1.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
                            USERNAME_MAX_LENGTH)
 from django.db.models import Avg
 from rest_framework import serializers

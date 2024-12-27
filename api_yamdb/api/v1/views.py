@@ -12,8 +12,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from api.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
-from api.serializers import (CategorySerializer, CommentSerializer,
+from api.v1.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
+from api.v1.serializers import (CategorySerializer, CommentSerializer,
                              GenreSerializer, ReviewSerializer,
                              SingupSerializer, TitleSerializer,
                              TokenSerializer, UserSerializer)

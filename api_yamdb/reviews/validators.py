@@ -2,7 +2,7 @@ import re
 import datetime
 
 from django.core.exceptions import ValidationError
-from api.constants import (
+from api.v1.constants import (
     USERNAME_REGEX, RESERVED_USERNAME
 )
 

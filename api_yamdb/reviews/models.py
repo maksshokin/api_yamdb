@@ -1,4 +1,4 @@
-from api.constants import (CORE_NAME_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
+from api.v1.constants import (CORE_NAME_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
                            EMAIL_MAX_LENGTH,
                            CORE_SLUG_MAX_LENGTH, ROLE_MAX_LENGTH,
                            TITLE_NAME_MAX_LENGTH, USERNAME_MAX_LENGTH)
