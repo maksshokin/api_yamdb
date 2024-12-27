@@ -45,14 +45,6 @@ class User(AbstractUser, ValidateUsername):
         blank=True
     )
 
-    @property
-    def is_moderator(self):
-        return self.role == self.MODERATOR
-
-    @property
-    def is_admin(self):
-        return self.role == self.ADMIN or self.is_staff
-
     class Meta:
         ordering = ('username',)
         verbose_name = 'пользователь'
@@ -60,6 +52,14 @@ class User(AbstractUser, ValidateUsername):
 
     def __str__(self):
         return self.username
+    
+    @property
+    def is_moderator(self):
+        return self.role == self.MODERATOR
+
+    @property
+    def is_admin(self):
+        return self.role == self.ADMIN or self.is_staff
 
 
 class CoreModel(models.Model):
