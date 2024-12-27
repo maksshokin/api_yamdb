@@ -63,6 +63,25 @@ class User(AbstractUser, ValidateUsername):
         return self.role == self.ADMIN or self.is_staff
 
 
+class PublishedContent(models.Model):
+    author = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        verbose_name='Автор',
+        related_name='%(class)s'
+    )
+    text = models.TextField(verbose_name='Текст')
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True,
+        db_index=True
+    )
+
+    class Meta:
+        abstract = True
+        ordering = ['-pub_date']
+
+
 class CoreModel(models.Model):
     name = models.CharField(
         max_length=CORE_NAME_MAX_LENGTH, verbose_name='Название'
@@ -124,28 +143,6 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
-
-class PublishedContent(models.Model):
-    author = models.ForeignKey(
-        get_user_model(),
-        on_delete=models.CASCADE,
-        verbose_name='Автор',
-        related_name='%(class)s'
-    )
-    text = models.TextField(verbose_name='Текст')
-    pub_date = models.DateTimeField(
-        verbose_name='Дата публикации',
-        auto_now_add=True,
-        db_index=True
-    )
-
-    class Meta:
-        abstract = True
-        ordering = ['-pub_date']
 
 
 class Review(PublishedContent):
