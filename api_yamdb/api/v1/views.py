@@ -29,6 +29,18 @@ class BaseCategoryGenreViewSet(
     http_method_names = ['get', 'post', 'delete']
 
 
+class BaseCommentReviewViewSet(viewsets.ModelViewSet):
+    pagination_class = PageNumberPagination
+    http_method_names = ['post', 'get', 'patch', 'delete']
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrStaff
+        ]
+
+    def get_review_or_title(self, model, **kwargs):
+        return get_object_or_404(model, **kwargs)
+
+
 @api_view(['POST'])
 def singup(request):
 
@@ -90,21 +102,15 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ReviewViewSet(viewsets.ModelViewSet):
+class ReviewViewSet(BaseCommentReviewViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly, IsOwnerOrStaff
-    ]
-    pagination_class = PageNumberPagination
-    http_method_names = ['post', 'get', 'patch', 'delete']
 
     def get_queryset(self):
-        title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
+        title = self.get_review_or_title(Title, id=self.kwargs.get('title_id'))
         return title.reviews.all().order_by('-pub_date')
 
     def perform_create(self, serializer):
-        title_id = self.kwargs.get('title_id')
-        title = generics.get_object_or_404(Title, id=title_id)
+        title = self.get_review_or_title(Title, id=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
 
 
@@ -138,14 +144,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     ]
 
 
-class CommentViewSet(viewsets.ModelViewSet):
+class CommentViewSet(BaseCommentReviewViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrStaff
-    ]
-    pagination_class = PageNumberPagination
-    http_method_names = ['post', 'get', 'patch', 'delete']
 
     def get_queryset(self):
         review_id = self.kwargs.get('review_id')
