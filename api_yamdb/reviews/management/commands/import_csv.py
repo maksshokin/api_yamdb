@@ -3,16 +3,9 @@ import os
 
 from django.core.management.base import BaseCommand
 
-from reviews.constants import (
-    CSV_FILES_PATH,
-    USERS_CSV,
-    CATEGORY_CSV,
-    GENRE_CSV,
-    TITLES_CSV,
-    GENRE_TITLE_CSV,
-    REVIEW_CSV,
-    COMMENTS_CSV
-)
+from reviews.constants import (CATEGORY_CSV, COMMENTS_CSV, CSV_FILES_PATH,
+                               GENRE_CSV, GENRE_TITLE_CSV, REVIEW_CSV,
+                               TITLES_CSV, USERS_CSV)
 from reviews.models import Category, Comment, Genre, Review, Title, User
 
 

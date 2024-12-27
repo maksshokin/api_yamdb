@@ -1,10 +1,9 @@
-import re
 import datetime
+import re
 
 from django.core.exceptions import ValidationError
-from api.v1.constants import (
-    USERNAME_REGEX, RESERVED_USERNAME
-)
+
+from api.v1.constants import RESERVED_USERNAME, USERNAME_REGEX
 
 
 class ValidateUsername:

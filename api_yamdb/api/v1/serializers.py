@@ -1,16 +1,11 @@
-from api.v1.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
-                           USERNAME_MAX_LENGTH)
-from django.db.models import Avg
-from rest_framework import serializers
-from reviews.models import Category, Comment, Genre, Review, Title, User
-from reviews.validators import ValidateUsername
-from django.db import IntegrityError
-from django.db.models import Avg
 from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from django.core.mail import send_mail
 
+from api.v1.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
+                              USERNAME_MAX_LENGTH)
 from reviews.models import Category, Comment, Genre, Review, Title, User
 from reviews.validators import ValidateUsername
 

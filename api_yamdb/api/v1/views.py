@@ -1,11 +1,9 @@
 from django.contrib.auth.tokens import default_token_generator
-
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters import CharFilter, NumberFilter
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
-from rest_framework import (filters, generics, permissions, status,
-                            viewsets)
+from rest_framework import filters, generics, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
@@ -14,9 +12,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from api.v1.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
 from api.v1.serializers import (CategorySerializer, CommentSerializer,
-                             GenreSerializer, ReviewSerializer,
-                             SingupSerializer, TitleSerializer,
-                             TokenSerializer, UserSerializer)
+                                GenreSerializer, ReviewSerializer,
+                                SingupSerializer, TitleSerializer,
+                                TokenSerializer, UserSerializer)
 from reviews.models import Category, Genre, Review, Title, User
 
 
