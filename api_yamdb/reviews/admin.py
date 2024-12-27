@@ -1,7 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from reviews.models import Category, Comment, Genre, Review, Title, User
+from reviews.models import (
+    Category,
+    Comment,
+    Genre,
+    Review,
+    Title,
+    User,
+)
 
 
 class UserAdmin(BaseUserAdmin):
@@ -53,9 +60,11 @@ class TitleAdmin(admin.ModelAdmin):
     autocomplete_fields = ('category',)
     filter_horizontal = ('genre',)
 
+    @admin.display(description='Жанры')
     def get_genres(self, obj):
-        return ", ".join([genre.name for genre in obj.genre.all()])
-    get_genres.short_description = 'Жанры'
+        return ', '.join(
+            [genre.name for genre in obj.genre.all()]
+        )
 
 
 @admin.register(Review)

@@ -96,7 +96,7 @@ class Title(models.Model):
     name = models.CharField(
         verbose_name='Название произведения',
         max_length=TITLE_NAME_MAX_LENGTH)
-    year = models.IntegerField(
+    year = models.SmallIntegerField(
         verbose_name='Год',
         validators=[ValidateYear()],
     )
@@ -119,6 +119,7 @@ class Title(models.Model):
     class Meta:
         verbose_name = 'Произведение'
         verbose_name_plural = 'Произведения'
+        ordering = ['name']
 
     def __str__(self):
         return self.name

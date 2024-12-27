@@ -18,6 +18,17 @@ from api.v1.serializers import (CategorySerializer, CommentSerializer,
 from reviews.models import Category, Genre, Review, Title, User
 
 
+class BaseCategoryGenreViewSet(
+    viewsets.GenericViewSet,
+    viewsets.mixins.ListModelMixin,
+    viewsets.mixins.CreateModelMixin,
+    viewsets.mixins.DestroyModelMixin
+    ):
+    permission_classes = (IsSuperUserOrAdmin,)
+    filter_backends = [SearchFilter]
+    http_method_names = ['get', 'post', 'delete']
+
+
 @api_view(['POST'])
 def singup(request):
 
@@ -97,36 +108,18 @@ class ReviewViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user, title=title)
 
 
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(BaseCategoryGenreViewSet):
     queryset = Category.objects.all().order_by('name')
     serializer_class = CategorySerializer
-    permission_classes = (IsSuperUserOrAdmin,)
-    filter_backends = [SearchFilter]
     search_fields = ['name', 'slug']
     lookup_field = 'slug'
-    http_method_names = ['get', 'post', 'delete']
-
-    def retrieve(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Метод не разрешен."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
 
 
-class GenreViewSet(viewsets.ModelViewSet):
+class GenreViewSet(BaseCategoryGenreViewSet):
     queryset = Genre.objects.all().order_by('name')
     serializer_class = GenreSerializer
-    permission_classes = (IsSuperUserOrAdmin,)
-    filter_backends = [SearchFilter]
     search_fields = ['name']
     lookup_field = 'slug'
-    http_method_names = ['get', 'post', 'delete']
-
-    def retrieve(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Метод не разрешен."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED
-        )
 
 
 class TitleViewSet(viewsets.ModelViewSet):
