@@ -23,7 +23,7 @@ class BaseCategoryGenreViewSet(
     viewsets.mixins.ListModelMixin,
     viewsets.mixins.CreateModelMixin,
     viewsets.mixins.DestroyModelMixin
-    ):
+):
     permission_classes = (IsSuperUserOrAdmin,)
     filter_backends = [SearchFilter]
     http_method_names = ['get', 'post', 'delete']
@@ -39,6 +39,12 @@ class BaseCommentReviewViewSet(viewsets.ModelViewSet):
 
     def get_review_or_title(self, model, **kwargs):
         return get_object_or_404(model, **kwargs)
+
+    def get_review(self):
+        review_id = self.kwargs.get('review_id')
+        title_id = self.kwargs.get('title_id')
+        return self.get_review_or_title(Review, id=review_id, title_id=title_id)
+
 
 
 @api_view(['POST'])
@@ -148,13 +154,9 @@ class CommentViewSet(BaseCommentReviewViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        review_id = self.kwargs.get('review_id')
-        title_id = self.kwargs.get('title_id')
-        review = get_object_or_404(Review, id=review_id, title_id=title_id)
+        review = self.get_review()
         return review.comments.all().order_by('-pub_date')
 
     def perform_create(self, serializer):
-        review_id = self.kwargs.get('review_id')
-        title_id = self.kwargs.get('title_id')
-        review = get_object_or_404(Review, id=review_id, title_id=title_id)
+        review = self.get_review()
         serializer.save(author=self.request.user, review=review)
