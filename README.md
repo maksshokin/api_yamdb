@@ -123,16 +123,117 @@ python manage.py import_csv
 # Примеры запросов API
 
 Регистрация пользователя:  
-``` POST /api/v1/auth/signup/ ```  
-Получение данных о своем аккаунте:  
-``` GET /api/v1/users/me/ ```  
-Добавление новой категории:  
-``` POST /api/v1/categories/ ```  
-Частичное обновление произведения:  
-``` PATCH /api/v1/titles/{titles_id} ```  
-Получение списка отзывов:  
-``` GET /api/v1/titles/{title_id}/reviews/ ```   
 
+``` POST /api/v1/auth/signup/ ```
+
+Запрос:
+```
+{
+  "email": "string",
+  "username": "string"
+}
+```
+После этого на email придет код подтверждения, который вместе с username необходимо отправить POST запросом на эндпоинт ```/api/v1/auth/token/```
+
+___
+Получение JWT-токена:  
+
+``` POST /api/v1/auth/token/```  
+ Запрос:
+```
+{
+  "username": "string",
+  "confirmation_code": "string"
+}
+```
+Ответ:
+```
+{
+"token": "string"
+}
+```
+___
+Добавление новой категории:  
+
+``` POST /api/v1/categories/ ```
+Запрос:
+```
+{
+  "name": "string",
+  "slug": "^-$"
+}
+```
+Вариации ответов:
+
+status sode = 201 Created
+```
+{
+  "name": "string",
+  "slug": "string"
+}
+```
+
+status sode = 400 Bad Request
+```
+{
+  "field_name": [
+    "string"
+  ]
+}
+```
+___
+Частичное обновление произведения: 
+
+``` PATCH /api/v1/titles/{titles_id} ```  
+
+Запрос:
+```
+{
+  "name": "string",
+  "year": 0,
+  "description": "string",
+  "genre": [
+    "string"
+  ],
+  "category": "string"
+}
+```
+Ответ:
+```
+{
+  "id": 0,
+  "name": "string",
+  "year": 0,
+  "rating": 0,
+  "description": "string",
+  "genre": [
+    {
+      "name": "string",
+      "slug": "^-$"
+    }
+  ],
+  "category": {
+    "name": "string",
+    "slug": "^-$"
+  }
+}
+```
+___
+Получение списка отзывов:  
+
+``` GET /api/v1/titles/{title_id}/reviews/ ``` 
+
+Ответ:
+```
+{
+"count": 0,
+"next": "string",
+"previous": "string",
+"results": [
+{}
+]
+}
+```
 ### Полный список запросов API находятся в [документации](http://127.0.0.1:8000/redoc/). (Доступна после запуска проекта.)
 
 # Авторы проекта
