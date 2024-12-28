@@ -10,10 +10,7 @@ class ValidateUsername:
     def __call__(self, username):
         if username == RESERVED_USERNAME:
             raise ValidationError(f'Нельзя использовать "{RESERVED_USERNAME}".')
-        if not re.fullmatch(USERNAME_REGEX, username):
-            raise ValidationError(
-                'Имя пользователя содержит недопустимые символы.'
-            )
+        validate_username(username)
 
 
 def validate_username(username):
