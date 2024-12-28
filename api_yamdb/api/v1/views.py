@@ -25,7 +25,6 @@ class BaseCategoryGenreViewSet(
 ):
     permission_classes = (IsSuperUserOrAdmin,)
     filter_backends = [SearchFilter]
-    http_method_names = ['get', 'post', 'delete']
 
 
 class BaseCommentReviewViewSet(viewsets.ModelViewSet):

@@ -8,10 +8,10 @@ from api.v1.constants import (CORE_NAME_MAX_LENGTH, CORE_SLUG_MAX_LENGTH,
                               EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
                               ROLE_MAX_LENGTH, TITLE_NAME_MAX_LENGTH,
                               USERNAME_MAX_LENGTH)
-from reviews.validators import ValidateUsername, ValidateYear
+from reviews.validators import validate_year, validate_username
 
 
-class User(AbstractUser, ValidateUsername):
+class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     ADMIN = 'admin'
@@ -31,7 +31,7 @@ class User(AbstractUser, ValidateUsername):
     )
     username = models.CharField(
         verbose_name='Имя пользователя',
-        validators=[ValidateUsername()],
+        validators=[validate_username],
         max_length=USERNAME_MAX_LENGTH,
         unique=True
     )
@@ -118,7 +118,7 @@ class Title(models.Model):
         max_length=TITLE_NAME_MAX_LENGTH)
     year = models.SmallIntegerField(
         verbose_name='Год',
-        validators=[ValidateYear()],
+        validators=[validate_year],
     )
     description = models.TextField(
         verbose_name='Описание произведения', blank=True, null=True

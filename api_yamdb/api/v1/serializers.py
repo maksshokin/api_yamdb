@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from api.v1.constants import (EMAIL_MAX_LENGTH, MAX_SCORE, MIN_SCORE,
                               USERNAME_MAX_LENGTH)
+from api_yamdb.settings import FROM_EMAIL
 from reviews.models import Category, Comment, Genre, Review, Title, User
 from reviews.validators import ValidateUsername
 
@@ -23,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer, ValidateUsername):
         )
 
 
-class SingupSerializer(serializers.Serializer):
+class SingupSerializer(serializers.Serializer, ValidateUsername):
 
     username = serializers.CharField(
         required=True,
@@ -40,7 +41,7 @@ class SingupSerializer(serializers.Serializer):
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
             subject='Код подтверждения',
-            from_email='',
+            from_email=FROM_EMAIL,
             message=f'{confirmation_code}',
             recipient_list=[user.email]
         )
@@ -51,7 +52,7 @@ class SingupSerializer(serializers.Serializer):
         username = data.get('username')
         if User.objects.filter(username=username, email=email).exists():
             return data
-        elif (
+        if (
             User.objects.filter(username=username).exists()
             or User.objects.filter(email=email).exists()
         ):
