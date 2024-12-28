@@ -10,7 +10,7 @@ class ValidateUsername:
     def __call__(self, username):
         if username == RESERVED_USERNAME:
             raise ValidationError(
-                f'Нельзя использовать {RESERVED_USERNAME}.'
+                f'Нельзя использовать "{RESERVED_USERNAME}".'
             )
         validate_username(username)
 
