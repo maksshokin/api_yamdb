@@ -125,12 +125,10 @@ class ReviewViewSet(BaseCommentReviewViewSet):
         return self.get_review_or_title(Title, id=self.kwargs.get('title_id'))
 
     def get_queryset(self):
-        title = self.get_title()
-        return title.reviews.all().order_by('-pub_date')
+        return self.get_title().reviews.all().order_by('-pub_date')
 
     def perform_create(self, serializer):
-        title = self.get_title()
-        serializer.save(author=self.request.user, title=title)
+        serializer.save(author=self.request.user, title=self.get_title())
 
 
 class CategoryViewSet(BaseCategoryGenreViewSet):
