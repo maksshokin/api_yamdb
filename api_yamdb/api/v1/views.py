@@ -155,9 +155,7 @@ class CommentViewSet(BaseCommentReviewViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        review = self.get_review()
-        return review.comments.all().order_by('-pub_date')
+        return self.get_review().comments.all().order_by('-pub_date')
 
     def perform_create(self, serializer):
-        review = self.get_review()
-        serializer.save(author=self.request.user, review=review)
+        serializer.save(author=self.request.user, review=self.get_review())
