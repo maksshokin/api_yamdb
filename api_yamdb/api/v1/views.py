@@ -12,8 +12,9 @@ from api.v1.filters import TitleFilter
 from api.v1.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
 from api.v1.serializers import (CategorySerializer, CommentSerializer,
                                 GenreSerializer, ReviewSerializer,
-                                SingupSerializer, TitleSerializer,
-                                TokenSerializer, UserSerializer)
+                                SingupSerializer, TitleGetSerializer,
+                                TitlePostSerializer, TokenSerializer,
+                                UserSerializer)
 from reviews.models import Category, Genre, Review, Title, User
 
 
@@ -145,7 +146,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score')
     ).order_by('name')
-    serializer_class = TitleSerializer
     permission_classes = (IsSuperUserOrAdmin,)
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_class = TitleFilter
@@ -155,6 +155,11 @@ class TitleViewSet(viewsets.ModelViewSet):
         'patch',
         'delete'
     ]
+    
+    def get_serializer_class(self):
+        if self.action in ('list', 'retrieve'):
+            return TitleGetSerializer
+        return TitlePostSerializer
 
 
 class CommentViewSet(BaseCommentReviewViewSet):
