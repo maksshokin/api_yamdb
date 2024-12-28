@@ -16,7 +16,7 @@ class ValidateUsername:
 def validate_username(username):
     if not re.fullmatch(USERNAME_REGEX, username):
             raise ValidationError(
-                'Имя пользователя содержит недопустимые символы.'
+                f'Имя пользователя содержит недопустимые символы.'
             )
 
 
