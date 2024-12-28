@@ -155,7 +155,7 @@ class TitleViewSet(viewsets.ModelViewSet):
         'patch',
         'delete'
     ]
-    
+
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return TitleGetSerializer

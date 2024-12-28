@@ -9,15 +9,17 @@ from api.v1.constants import RESERVED_USERNAME, USERNAME_REGEX
 class ValidateUsername:
     def __call__(self, username):
         if username == RESERVED_USERNAME:
-            raise ValidationError(f'Нельзя использовать "{RESERVED_USERNAME}".')
+            raise ValidationError(
+                f'Нельзя использовать "{RESERVED_USERNAME}".'
+            )
         validate_username(username)
 
 
 def validate_username(username):
     if not re.fullmatch(USERNAME_REGEX, username):
-            raise ValidationError(
-                f'Имя пользователя содержит недопустимые символы.'
-            )
+        raise ValidationError(
+            f'Имя пользователя содержит недопустимые символы.'
+        )
 
 
 def validate_year(value):
