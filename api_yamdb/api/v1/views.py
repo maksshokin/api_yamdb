@@ -25,6 +25,15 @@ class BaseCategoryGenreViewSet(
 ):
     permission_classes = (IsSuperUserOrAdmin,)
     filter_backends = [SearchFilter]
+    lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        model = self.queryset.model
+        if model == Category:
+            return CategorySerializer
+        elif model == Genre:
+            return GenreSerializer
+        return super().get_serializer_class()
 
 
 class BaseCommentReviewViewSet(viewsets.ModelViewSet):
@@ -112,27 +121,26 @@ class UserViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(BaseCommentReviewViewSet):
     serializer_class = ReviewSerializer
 
+    def get_title(self):
+        return self.get_review_or_title(Title, id=self.kwargs.get('title_id'))
+
     def get_queryset(self):
-        title = self.get_review_or_title(Title, id=self.kwargs.get('title_id'))
+        title = self.get_title()
         return title.reviews.all().order_by('-pub_date')
 
     def perform_create(self, serializer):
-        title = self.get_review_or_title(Title, id=self.kwargs.get('title_id'))
+        title = self.get_title()
         serializer.save(author=self.request.user, title=title)
 
 
 class CategoryViewSet(BaseCategoryGenreViewSet):
     queryset = Category.objects.all().order_by('name')
-    serializer_class = CategorySerializer
     search_fields = ['name', 'slug']
-    lookup_field = 'slug'
 
 
 class GenreViewSet(BaseCategoryGenreViewSet):
     queryset = Genre.objects.all().order_by('name')
-    serializer_class = GenreSerializer
     search_fields = ['name']
-    lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
