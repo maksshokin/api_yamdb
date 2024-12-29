@@ -56,7 +56,9 @@ class SingupSerializer(serializers.Serializer, ValidateUsername):
             User.objects.filter(username=username).exists()
             or User.objects.filter(email=email).exists()
         ):
-            raise serializers.ValidationError()
+            raise serializers.ValidationError(
+                'Такое имя или почта уже заняты!'
+            )
         return data
 
 

@@ -8,10 +8,6 @@ from api.v1.constants import RESERVED_USERNAME, USERNAME_REGEX
 
 class ValidateUsername:
     def __call__(self, username):
-        if username == RESERVED_USERNAME:
-            raise ValidationError(
-                f'Нельзя использовать "{RESERVED_USERNAME}".'
-            )
         validate_username(username)
 
 
@@ -20,7 +16,10 @@ def validate_username(username):
         raise ValidationError(
             'Имя пользователя содержит недопустимые символы.'
         )
-
+    if username == RESERVED_USERNAME:
+        raise ValidationError(
+                f'Нельзя использовать "{RESERVED_USERNAME}".'
+            )
 
 def validate_year(value):
     current_year = datetime.date.today().year
