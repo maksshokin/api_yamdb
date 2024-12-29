@@ -12,7 +12,7 @@ from api.v1.filters import TitleFilter
 from api.v1.permissions import IsOwnerOrStaff, IsSuperUserOrAdmin, UserAdmin
 from api.v1.serializers import (CategorySerializer, CommentSerializer,
                                 GenreSerializer, ReviewSerializer,
-                                SingupSerializer, TitleGetSerializer,
+                                SingupSerializer, TitleReadSerializer,
                                 TitlePostSerializer, TokenSerializer,
                                 UserSerializer)
 from reviews.models import Category, Genre, Review, Title, User
@@ -157,8 +157,8 @@ class TitleViewSet(viewsets.ModelViewSet):
     ]
 
     def get_serializer_class(self):
-        if self.action in permissions.SAFE_METHODS:
-            return TitleGetSerializer
+        if self.action in ('list', 'retrieve'):
+            return TitleReadSerializer
         return TitlePostSerializer
 
 

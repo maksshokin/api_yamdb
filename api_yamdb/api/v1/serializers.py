@@ -128,13 +128,16 @@ class GenreSerializer(serializers.ModelSerializer):
         search_fields = ['name']
 
 
-class TitleGetSerializer(serializers.ModelSerializer):
+class TitleReadSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     genre = GenreSerializer(
         read_only=True,
         many=True
     )
-    rating = serializers.IntegerField(read_only=True)
+    rating = serializers.IntegerField(
+        read_only=True,
+        default=0
+    )
 
     class Meta:
         fields = '__all__'
@@ -155,6 +158,9 @@ class TitlePostSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
+    
+    def to_representation(self, instance):
+        return TitleReadSerializer(instance).data
 
 
 class CommentSerializer(serializers.ModelSerializer):
