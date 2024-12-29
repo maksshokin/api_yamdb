@@ -158,7 +158,7 @@ class TitlePostSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Title
-    
+
     def to_representation(self, instance):
         return TitleReadSerializer(instance).data
 

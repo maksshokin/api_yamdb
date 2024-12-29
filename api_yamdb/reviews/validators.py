@@ -18,8 +18,9 @@ def validate_username(username):
         )
     if username == RESERVED_USERNAME:
         raise ValidationError(
-                f'Нельзя использовать "{RESERVED_USERNAME}".'
-            )
+            f'Нельзя использовать "{RESERVED_USERNAME}".'
+        )
+
 
 def validate_year(value):
     current_year = datetime.date.today().year
